@@ -1,0 +1,58 @@
+version: '2'
+
+services:
+  meeton-ui:
+    image: 'meeton-ui:latest'
+    volumes:
+      - '.:/MeetOnFrontend/app'
+      - '/MeetOnFrontend/app/node_modules'
+    ports:
+      - 3000:3000
+      
+  meeton-core:
+    image: 'meeton-core:latest'
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/meeton
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  meeton-am:
+    image: 'meeton-am:latest'
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mongo
+    environment:
+      - SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE=admin
+      - SPRING_DATA_MONGODB_AUTO_INDEX_CREATION=true
+      - SPRING_DATA_MONGODB_DATABASE=am-local
+      - SPRING_DATA_MONGODB_HOST=mongo
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_USERNAME=root
+      - SPRING_DATA_MONGODB_PASSWORD=rootpassword
+
+  db:
+    image: 'postgres:13.1-alpine'
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27018:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+volumes:
+  mongodb_data_container:

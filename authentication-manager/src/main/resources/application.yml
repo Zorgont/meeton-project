@@ -1,0 +1,27 @@
+spring:
+  data:
+    mongodb:
+      auto-index-creation: true
+      authentication-database: admin
+      database: spring_login
+      port: 27017
+      host: localhost
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 9387373968-013ktbioq3s0remtt09mgmpup4lv996g.apps.googleusercontent.com
+            client-secret: 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
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+app:
+  tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+  tokenExpirationMsec: 864000000
+  authorizedRedirectUris:
+    - http://localhost:3000/oauth2/redirect
+
+server:
+  port: 8081
