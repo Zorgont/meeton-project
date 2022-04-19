@@ -48,10 +48,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/{username}/by-username")
     public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
         try {
-            return ResponseEntity.ok(userService.getUserByEmail(username));
+            return ResponseEntity.ok(userService.getUserByName(username));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }

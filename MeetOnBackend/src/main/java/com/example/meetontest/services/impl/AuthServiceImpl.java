@@ -30,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -66,36 +67,36 @@ public class AuthServiceImpl implements AuthService {
                 userDetails.getEmail(), roles);
     }
 
-    @Override
-    public JwtResponse authenticateUserViaGoogle(GoogleLoginRequest loginRequest) {
-        // проверить токен
-        if (!confirmGoogleToken(loginRequest.getAccessToken(), loginRequest.getEmail()))
-            throw new ValidatorException("Error: Wrong access token!");
-
-        User user;
-        if (!userRepository.existsByEmail(loginRequest.getEmail())) {
-            if (userRepository.existsByUsername(loginRequest.getUsername()))
-                throw new ValidatorException("This username is already taken!");
-
-            // зарегистрировать пользователя
-            user = createUser(new SignupRequest(loginRequest.getUsername(), loginRequest.getEmail(), null, loginRequest.getAccessToken()));
-            user.setFirstName(loginRequest.getFirstName());
-            user.setSecondName(loginRequest.getSecondName());
-            user.setIsEnabled(true);
-            user.setStatus("oAuth2");
-            userRepository.save(user);
-        }
-        else {
-            user = userRepository.findByEmail(loginRequest.getEmail()).get();
-            if (!user.getStatus().equals("oAuth2"))
-                throw new ValidatorException("User already registered via platform registration. Please enter your username and password!");
-        }
-
-        user.setPassword(encoder.encode(loginRequest.getAccessToken()));
-        userRepository.save(user);
-
-        return authenticateUser(new LoginRequest(user.getUsername(), loginRequest.getAccessToken()));
-    }
+//    @Override
+//    public JwtResponse authenticateUserViaGoogle(GoogleLoginRequest loginRequest) {
+//        // проверить токен
+//        if (!confirmGoogleToken(loginRequest.getAccessToken(), loginRequest.getEmail()))
+//            throw new ValidatorException("Error: Wrong access token!");
+//
+//        User user;
+//        if (!userRepository.existsByEmail(loginRequest.getEmail())) {
+//            if (userRepository.existsByUsername(loginRequest.getUsername()))
+//                throw new ValidatorException("This username is already taken!");
+//
+//            // зарегистрировать пользователя
+//            user = createUser(new SignupRequest(loginRequest.getUsername(), loginRequest.getEmail(), null, loginRequest.getAccessToken()));
+//            user.setFirstName(loginRequest.getFirstName());
+//            user.setSecondName(loginRequest.getSecondName());
+//            user.setIsEnabled(true);
+//            user.setStatus("oAuth2");
+//            userRepository.save(user);
+//        }
+//        else {
+//            user = userRepository.findByEmail(loginRequest.getEmail()).get();
+//            if (!user.getStatus().equals("oAuth2"))
+//                throw new ValidatorException("User already registered via platform registration. Please enter your username and password!");
+//        }
+//
+//        user.setPassword(encoder.encode(loginRequest.getAccessToken()));
+//        userRepository.save(user);
+//
+//        return authenticateUser(new LoginRequest(user.getUsername(), loginRequest.getAccessToken()));
+//    }
 
     public void registerUser(SignupRequest signUpRequest) throws ValidatorException {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -107,23 +108,36 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = createUser(signUpRequest);
-        user.setStatus("EmailNotConfirmed");
-        userRepository.save(user);
+        if (signUpRequest.getProvider().equals("platform")) {
+            user.setStatus("EmailNotConfirmed");
 
-        ConfirmationToken token = confirmationTokenService.createToken(user);
-        try {
-            emailService.sendConfirmationMessage(user, token.getConfirmationToken());
+            ConfirmationToken token = confirmationTokenService.createToken(user);
+            try {
+                emailService.sendConfirmationMessage(user, token.getConfirmationToken());
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        } else {
+            user.setIsEnabled(true);
+            user.setStatus("Confirmed");
         }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        userRepository.save(user);
     }
 
     private User createUser(SignupRequest request) {
         // Create new user's account
-        User user = new User(request.getUsername(),
-                encoder.encode(request.getPassword()),
-                request.getEmail(), false);
+
+        User user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .firstName(request.getFirstName())
+                .secondName(request.getSecondName())
+                .isEnabled(false)
+                .build();
+        if (!StringUtils.isEmpty(request.getPassword())) {
+            user.setPassword(encoder.encode(request.getPassword()));
+        }
 
         Set<String> strRoles = request.getRole();
         Set<Role> roles = new HashSet<>();
@@ -158,14 +172,14 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.save(user);
     }
 
-    private boolean confirmGoogleToken(String accessToken, String userEmail) {
-        ResponseEntity<Map> response = new RestTemplate().getForEntity(googleUrl + accessToken, Map.class);
-        if(response.getStatusCode() == HttpStatus.OK) {
-            String email = response.getBody().getOrDefault("email", "").toString();
-            return !(email.isEmpty()) && email.equals(userEmail);
-        }
-        return false;
-    }
+//    private boolean confirmGoogleToken(String accessToken, String userEmail) {
+//        ResponseEntity<Map> response = new RestTemplate().getForEntity(googleUrl + accessToken, Map.class);
+//        if(response.getStatusCode() == HttpStatus.OK) {
+//            String email = response.getBody().getOrDefault("email", "").toString();
+//            return !(email.isEmpty()) && email.equals(userEmail);
+//        }
+//        return false;
+//    }
 
     @Transactional
     public void confirmUser(String token){

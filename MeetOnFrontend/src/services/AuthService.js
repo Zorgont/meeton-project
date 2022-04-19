@@ -72,9 +72,6 @@ class AuthService {
     }
 
     getCurrentUser() {
-        if (!localStorage.getItem('user')) {
-            UserService.getUserById(localStorage.getItem("username"))
-        }
         return JSON.parse(localStorage.getItem('user'));
 
     }

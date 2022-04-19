@@ -9,14 +9,14 @@ import Avatar from '@material-ui/core/Avatar';
 import UserService from "../services/UserService";
 import TagGroupService from "../services/TagGroupService";
 import MeetingCardComponent from "./MeetingCardComponent";
-import { API_BASE_URL } from '../constants/constant';
+import { ACCESS_TOKEN, API_BASE_URL } from '../constants/constant';
 
 export default class UserProfileComponent extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            currentUser: AuthService.getCurrentUser(),
+            currentUser: null,
             meetings: [],
             requests: null,
             notifications: [],
@@ -26,40 +26,138 @@ export default class UserProfileComponent extends Component {
     }
 
     componentDidMount() {
-        let id = Number(this.props.match.params.userId ? this.props.match.params.userId : this.state.currentUser.id);
-        console.log("dasdasdasdd")
-        console.log(id)
-        UserService.getUserById(id).then(res => {
-            this.setState({user: res.data})
-        });
+        if (!localStorage.getItem('user')) {
+            UserService.getUserByUsername(localStorage.getItem("username")).then(res => {
+                res.data.token = localStorage.getItem(ACCESS_TOKEN);
+                console.log("res.data")
+                console.log(res.data)
+                localStorage.setItem("user", JSON.stringify(res.data));
+                this.setState({currentUser: res.data});
+                console.log("currentUser")
+                console.log(this.state.currentUser)
 
-        MeetingService.getMeetingsByManager(id).then((res) => {
-            this.setState({ meetings: res.data })
-            console.log(res.data)
-        });
+                let id = Number(this.props.match.params.userId ? this.props.match.params.userId : this.state.currentUser.id);
+                console.log("dasdasdasdd")
+                console.log(id)
+                UserService.getUserById(id).then(res => {
+                    this.setState({user: res.data})
+                });
 
-        TagGroupService.getTagGroups(id).then(res => {
-            this.setState({tagGroups: res.data})
-        });
+                MeetingService.getMeetingsByManager(id).then((res) => {
+                    this.setState({ meetings: res.data })
+                    console.log(res.data)
+                });
 
-        if (this.state.currentUser !== null && id === this.state.currentUser.id)
-            RequestService.getRequestsByUserId(id).then((res) => {
-                let requests = []
-                for (let index in res.data) {
-                    let request = res.data[index];
-                    if (request.role === "MANAGER")
-                        continue;
-                    MeetingService.getMeetingById(request.meeting_id).then(res => {
-                        let meeting = res.data
-                        console.log(meeting)
-                        requests.push({
-                            request: request,
-                            meeting: meeting
-                        })
-                        this.setState({requests: requests})
+                TagGroupService.getTagGroups(id).then(res => {
+                    this.setState({tagGroups: res.data})
+                });
+
+                if (this.state.currentUser !== null && id === this.state.currentUser.id) {
+                    RequestService.getRequestsByUserId(id).then((res) => {
+                        let requests = []
+                        for (let index in res.data) {
+                            let request = res.data[index];
+                            if (request.role === "MANAGER")
+                                continue;
+                            MeetingService.getMeetingById(request.meeting_id).then(res => {
+                                let meeting = res.data
+                                console.log(meeting)
+                                requests.push({
+                                    request: request,
+                                    meeting: meeting
+                                })
+                                this.setState({requests: requests})
+                            })
+                        }
                     })
                 }
-            })
+            });
+        } else {
+            let res = JSON.parse(localStorage.getItem('user'));
+            console.log("res")
+            console.log(res)
+            this.setState({currentUser: res});
+            this.state.currentUser = res
+            console.log("currentUser-22")
+            console.log(this.state.currentUser)
+            let id = Number(this.props.match.params.userId ? this.props.match.params.userId : this.state.currentUser.id);
+            console.log("dasdasdasdd")
+            console.log(id)
+            UserService.getUserById(id).then(res => {
+                this.setState({user: res.data})
+            });
+
+            MeetingService.getMeetingsByManager(id).then((res) => {
+                this.setState({ meetings: res.data })
+                console.log(res.data)
+            });
+
+            TagGroupService.getTagGroups(id).then(res => {
+                this.setState({tagGroups: res.data})
+            });
+
+            if (this.state.currentUser !== null && id === this.state.currentUser.id) {
+                RequestService.getRequestsByUserId(id).then((res) => {
+                    let requests = []
+                    for (let index in res.data) {
+                        let request = res.data[index];
+                        if (request.role === "MANAGER")
+                            continue;
+                        MeetingService.getMeetingById(request.meeting_id).then(res => {
+                            let meeting = res.data
+                            console.log(meeting)
+                            requests.push({
+                                request: request,
+                                meeting: meeting
+                            })
+                            this.setState({requests: requests})
+                        })
+                    }
+                })
+            }
+        }
+        // return ;
+        // AuthService.getCurrentUser().then(res => {
+        //     res.data.token = localStorage.getItem(ACCESS_TOKEN);
+        //     localStorage.setItem("user", res.data);
+        //     this.setState({currentUser: res.data});
+
+        //     let id = Number(this.props.match.params.userId ? this.props.match.params.userId : this.state.currentUser.id);
+        //     console.log("dasdasdasdd")
+        //     console.log(id)
+        //     UserService.getUserById(id).then(res => {
+        //         this.setState({user: res.data})
+        //     });
+
+        //     MeetingService.getMeetingsByManager(id).then((res) => {
+        //         this.setState({ meetings: res.data })
+        //         console.log(res.data)
+        //     });
+
+        //     TagGroupService.getTagGroups(id).then(res => {
+        //         this.setState({tagGroups: res.data})
+        //     });
+
+        //     if (this.state.currentUser !== null && id === this.state.currentUser.id) {
+        //         RequestService.getRequestsByUserId(id).then((res) => {
+        //             let requests = []
+        //             for (let index in res.data) {
+        //                 let request = res.data[index];
+        //                 if (request.role === "MANAGER")
+        //                     continue;
+        //                 MeetingService.getMeetingById(request.meeting_id).then(res => {
+        //                     let meeting = res.data
+        //                     console.log(meeting)
+        //                     requests.push({
+        //                         request: request,
+        //                         meeting: meeting
+        //                     })
+        //                     this.setState({requests: requests})
+        //                 })
+        //             }
+        //         })
+        //     }
+        // });
     }
 
     componentDidUpdate(prevProps) {

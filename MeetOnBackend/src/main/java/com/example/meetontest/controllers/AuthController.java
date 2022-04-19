@@ -41,15 +41,15 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/google")
-    public ResponseEntity<?> authenticateUserViaGoogle(@RequestBody GoogleLoginRequest loginRequest) {
-        try {
-            return ResponseEntity.ok(authService.authenticateUserViaGoogle(loginRequest));
-        }
-        catch (Exception e) {
-            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
-        }
-    }
+//    @PostMapping("/google")
+//    public ResponseEntity<?> authenticateUserViaGoogle(@RequestBody GoogleLoginRequest loginRequest) {
+//        try {
+//            return ResponseEntity.ok(authService.authenticateUserViaGoogle(loginRequest));
+//        }
+//        catch (Exception e) {
+//            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+//        }
+//    }
 
     @GetMapping("/existsByName/{username}")
     public boolean existsByUsername(@PathVariable String username) {

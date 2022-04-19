@@ -26,7 +26,12 @@ public class SignupRequest {
 
     private Set<String> role;
 
-    @NotBlank
-    @Size(min = 6, max = 40)
     private String password;
+
+    private String firstName;
+    private String secondName;
+    private String name;
+    private String imageUrl;
+    private Boolean emailVerified = false;
+    private String provider;
 }
