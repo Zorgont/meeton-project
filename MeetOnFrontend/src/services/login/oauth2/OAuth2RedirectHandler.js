@@ -23,7 +23,6 @@ class OAuth2RedirectHandler extends Component {
                 response => { 
                     console.log(response.data)
                     if (response.data.valid) {
-                        console.log("BEFORE redirecting to profile...");
                         UserService.getUserByUsername(response.data.username).then(res => {
                             res.data.token = localStorage.getItem(ACCESS_TOKEN);
                             localStorage.setItem("user", JSON.stringify(res.data));
@@ -47,7 +46,7 @@ class OAuth2RedirectHandler extends Component {
                 pathname: "/login",
                 state: { 
                     from: this.props.location,
-                    error: error 
+                    message: error 
                 }
             }}/>; 
         }

@@ -1,12 +1,15 @@
 package com.spring.login.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.StringUtils;
 
 @Data
+@Builder
 @Document
 public class User {
 
@@ -23,10 +26,10 @@ public class User {
 
     private String imageUrl;
 
-    private Boolean emailVerified = false;
+    private Boolean emailVerified;
 
     @JsonIgnore
-    private String password = null;
+    private String password;
 
     private AuthProvider provider;
 

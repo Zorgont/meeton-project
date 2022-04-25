@@ -34,6 +34,10 @@ export default class NewLoginComponent extends Component {
             loading: false,
             message: ""
         };
+
+        if (props?.location?.state?.message) {
+            this.state.message = props.location.state.message;
+        }
     }
 
     onChangeUsername(e) {

@@ -47,8 +47,8 @@ public class AuthServiceImpl implements AuthService {
     final private PasswordEncoder encoder;
     final private JwtUtils jwtUtils;
 
-    @Value("${meeton.app.jwtValidation.google}")
-    private String googleUrl;
+//    @Value("${meeton.app.jwtValidation.google}")
+//    private String googleUrl;
 
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -108,20 +108,22 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = createUser(signUpRequest);
-        if (signUpRequest.getProvider().equals("platform")) {
-            user.setStatus("EmailNotConfirmed");
-
-            ConfirmationToken token = confirmationTokenService.createToken(user);
-            try {
-                emailService.sendConfirmationMessage(user, token.getConfirmationToken());
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        } else {
-            user.setIsEnabled(true);
-            user.setStatus("Confirmed");
-        }
+//        if (signUpRequest.getProvider().equals("platform")) {
+//            user.setStatus("EmailNotConfirmed");
+//
+//            ConfirmationToken token = confirmationTokenService.createToken(user);
+//            try {
+//                emailService.sendConfirmationMessage(user, token.getConfirmationToken());
+//            }
+//            catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        } else {
+//            user.setIsEnabled(true);
+//            user.setStatus("Confirmed");
+//        }
+        user.setIsEnabled(true);
+        user.setStatus("Confirmed");
         userRepository.save(user);
     }
 

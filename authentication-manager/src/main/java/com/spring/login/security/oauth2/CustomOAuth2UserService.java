@@ -65,20 +65,39 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
-        User user = new User();
-
-        user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
-        user.setProviderId(oAuth2UserInfo.getId());
+        String username;
         if (StringUtils.isEmpty(oAuth2UserInfo.getUsername())) {
-            user.setUsername(MOCK_USERNAME);
+            username = MOCK_USERNAME;
         } else {
-            user.setUsername(oAuth2UserInfo.getUsername());
+            username = oAuth2UserInfo.getUsername();
         }
-        user.setFirstName(oAuth2UserInfo.getFirstName());
-        user.setSecondName(oAuth2UserInfo.getSecondName());
-        user.setName(oAuth2UserInfo.getName());
-        user.setEmail(oAuth2UserInfo.getEmail());
-        user.setImageUrl(oAuth2UserInfo.getImageUrl());
+
+        User user = User.builder()
+                .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))
+                .providerId(oAuth2UserInfo.getId())
+                .username(username)
+                .firstName(oAuth2UserInfo.getFirstName())
+                .secondName(oAuth2UserInfo.getSecondName())
+                .name(oAuth2UserInfo.getName())
+                .email(oAuth2UserInfo.getEmail())
+                .imageUrl(oAuth2UserInfo.getImageUrl())
+                .build();
+
+
+//        User user = new User();
+//
+//        user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
+//        user.setProviderId(oAuth2UserInfo.getId());
+//        if (StringUtils.isEmpty(oAuth2UserInfo.getUsername())) {
+//            user.setUsername(MOCK_USERNAME);
+//        } else {
+//            user.setUsername(oAuth2UserInfo.getUsername());
+//        }
+//        user.setFirstName(oAuth2UserInfo.getFirstName());
+//        user.setSecondName(oAuth2UserInfo.getSecondName());
+//        user.setName(oAuth2UserInfo.getName());
+//        user.setEmail(oAuth2UserInfo.getEmail());
+//        user.setImageUrl(oAuth2UserInfo.getImageUrl());
         return userService.save(user);
     }
 }
