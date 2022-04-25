@@ -1,17 +1,17 @@
 import axios from "axios";
 import { ACCESS_TOKEN, AM_BASE_URL, API_BASE_URL, GOOGLE, GOOGLE_AUTH_URL } from "../constants/constant";
-import authNewHeader from "./AuthNewHeader";
+import authHeader from "./AuthHeader";
 import UserService from "./UserService";
 
 const API_URL = API_BASE_URL + "/api/v1/auth/";
 
 class AuthService {
     getNewCurrentUser() {
-        return axios.get(AM_BASE_URL + '/profile', { headers: authNewHeader() });
+        return axios.get(AM_BASE_URL + '/profile', { headers: authHeader() });
     }
     updateUsername(username) {
         console.log(AM_BASE_URL + '/updateUsername?username=' + username)
-        return axios.get(AM_BASE_URL + '/updateUsername?username=' + username, { headers: authNewHeader() });
+        return axios.get(AM_BASE_URL + '/updateUsername?username=' + username, { headers: authHeader() });
     }
 
 
