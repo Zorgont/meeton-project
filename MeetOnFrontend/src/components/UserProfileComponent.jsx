@@ -26,76 +26,25 @@ export default class UserProfileComponent extends Component {
     }
 
     componentDidMount() {
-        if (!localStorage.getItem('user')) {
-            UserService.getUserByUsername(localStorage.getItem("username")).then(res => {
-                res.data.token = localStorage.getItem(ACCESS_TOKEN);
-                console.log("res.data")
-                console.log(res.data)
-                localStorage.setItem("user", JSON.stringify(res.data));
-                this.setState({currentUser: res.data});
-                console.log("currentUser")
-                console.log(this.state.currentUser)
+        let res = JSON.parse(localStorage.getItem('user'));
+        this.setState({currentUser: res});
+        console.log(this.props.match.params)
+        let username = this.props.match.params.username ? this.props.match.params.username : res.username;
+        console.log("current username is: %s", username)
+        UserService.getUserByUsername(username).then(res => {
+            this.setState({user: res.data});
 
-                let id = Number(this.props.match.params.userId ? this.props.match.params.userId : this.state.currentUser.id);
-                console.log("dasdasdasdd")
-                console.log(id)
-                UserService.getUserById(id).then(res => {
-                    this.setState({user: res.data})
-                });
-
-                MeetingService.getMeetingsByManager(id).then((res) => {
-                    this.setState({ meetings: res.data })
-                    console.log(res.data)
-                });
-
-                TagGroupService.getTagGroups(id).then(res => {
-                    this.setState({tagGroups: res.data})
-                });
-
-                if (this.state.currentUser !== null && id === this.state.currentUser.id) {
-                    RequestService.getRequestsByUserId(id).then((res) => {
-                        let requests = []
-                        for (let index in res.data) {
-                            let request = res.data[index];
-                            if (request.role === "MANAGER")
-                                continue;
-                            MeetingService.getMeetingById(request.meeting_id).then(res => {
-                                let meeting = res.data
-                                console.log(meeting)
-                                requests.push({
-                                    request: request,
-                                    meeting: meeting
-                                })
-                                this.setState({requests: requests})
-                            })
-                        }
-                    })
-                }
-            });
-        } else {
-            let res = JSON.parse(localStorage.getItem('user'));
-            console.log("res")
-            console.log(res)
-            this.setState({currentUser: res});
-            this.state.currentUser = res
-            console.log("currentUser-22")
-            console.log(this.state.currentUser)
-            let id = Number(this.props.match.params.userId ? this.props.match.params.userId : this.state.currentUser.id);
-            console.log("dasdasdasdd")
-            console.log(id)
-            UserService.getUserById(id).then(res => {
-                this.setState({user: res.data})
-            });
+            const id = res.data.id;
 
             MeetingService.getMeetingsByManager(id).then((res) => {
                 this.setState({ meetings: res.data })
                 console.log(res.data)
             });
-
+    
             TagGroupService.getTagGroups(id).then(res => {
                 this.setState({tagGroups: res.data})
             });
-
+    
             if (this.state.currentUser !== null && id === this.state.currentUser.id) {
                 RequestService.getRequestsByUserId(id).then((res) => {
                     let requests = []
@@ -115,53 +64,11 @@ export default class UserProfileComponent extends Component {
                     }
                 })
             }
-        }
-        // return ;
-        // AuthService.getCurrentUser().then(res => {
-        //     res.data.token = localStorage.getItem(ACCESS_TOKEN);
-        //     localStorage.setItem("user", res.data);
-        //     this.setState({currentUser: res.data});
-
-        //     let id = Number(this.props.match.params.userId ? this.props.match.params.userId : this.state.currentUser.id);
-        //     console.log("dasdasdasdd")
-        //     console.log(id)
-        //     UserService.getUserById(id).then(res => {
-        //         this.setState({user: res.data})
-        //     });
-
-        //     MeetingService.getMeetingsByManager(id).then((res) => {
-        //         this.setState({ meetings: res.data })
-        //         console.log(res.data)
-        //     });
-
-        //     TagGroupService.getTagGroups(id).then(res => {
-        //         this.setState({tagGroups: res.data})
-        //     });
-
-        //     if (this.state.currentUser !== null && id === this.state.currentUser.id) {
-        //         RequestService.getRequestsByUserId(id).then((res) => {
-        //             let requests = []
-        //             for (let index in res.data) {
-        //                 let request = res.data[index];
-        //                 if (request.role === "MANAGER")
-        //                     continue;
-        //                 MeetingService.getMeetingById(request.meeting_id).then(res => {
-        //                     let meeting = res.data
-        //                     console.log(meeting)
-        //                     requests.push({
-        //                         request: request,
-        //                         meeting: meeting
-        //                     })
-        //                     this.setState({requests: requests})
-        //                 })
-        //             }
-        //         })
-        //     }
-        // });
+        });        
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.match.params.userId !== prevProps.match.params.userId)
+        if (this.props.match.params.username !== prevProps.match.params.username)
             window.location.reload();
     }
 
@@ -183,7 +90,7 @@ export default class UserProfileComponent extends Component {
                                 <div className="row">
                                     <div className="col d-flex justify-content-center">
                                         <div style={{position: "relative"}}>
-                                            <Avatar style={{width: "130px", height: "130px"}} src={this.state.user !== null ? API_BASE_URL + `/api/v1/users/${this.state.user?.id}/avatar` : ""}/>
+                                            <Avatar style={{width: "130px", height: "130px"}} src={this.state.user !== null ? API_BASE_URL + `/api/v1/users/${this.state.user?.username}/avatar` : ""}/>
                                             {user?.id === this.state.currentUser?.id && <div onClick={this.editProfileClicked.bind(this)} style={{position: "absolute", right: "12px", width: "30px", height: "30px", bottom: "-5px", backgroundColor: "white", borderRadius: "50px", cursor: "pointer"}} className="gradient-gray-border">
                                                 <EditOutlinedIcon style={{margin: "0 0 0 3px"}} />
                                             </div>}

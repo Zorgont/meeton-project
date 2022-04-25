@@ -17,6 +17,13 @@ spring:
             scope:
               - email
               - profile
+          github:
+            client-id: Iv1.043f3e4e6820d9c2
+            client-secret: 6505f5b8566fc4099f7f4e8f0bafb68015bd2082
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
 app:
   tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
   tokenExpirationMsec: 864000000

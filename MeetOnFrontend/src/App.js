@@ -109,7 +109,7 @@ class App extends Component {
                         <Route exact path={["/", "/home"]} component={MeetingList} />
                         <Route exact path="/login" component={NewLoginComponent} />
                         <Route exact path="/register" component={Register} />
-                        <Route exact path="/users/:userId" component={UserProfileComponent}  />
+                        <Route exact path="/users/:username" component={UserProfileComponent}  />
                         <Route exact path="/profile" component={UserProfileComponent} />
                         <Route exact path="/profile/update" component={ProfileSettings} />
                         <Route exact path="/user" component={BoardUser} />

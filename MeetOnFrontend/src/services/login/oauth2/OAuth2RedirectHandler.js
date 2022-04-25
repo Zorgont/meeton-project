@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ACCESS_TOKEN } from '../../../constants/constant';
 import { Redirect } from 'react-router-dom'
 import AuthService from '../../AuthService';
+import UserService from '../../UserService';
 
 class OAuth2RedirectHandler extends Component {
     getUrlParameter(name) {
@@ -22,15 +23,17 @@ class OAuth2RedirectHandler extends Component {
                 response => { 
                     console.log(response.data)
                     if (response.data.valid) {
-                        localStorage.setItem("username", response.data.username);
-                        console.log("redirecting to profile");
-                        this.props.history.push(`/profile`);
-                        window.location.reload();
-                        // return <Redirect to={{
-                        //     pathname: "/profile",
-                        //     state: { from: this.props.location }
-                        // }}/>; 
+                        console.log("BEFORE redirecting to profile...");
+                        UserService.getUserByUsername(response.data.username).then(res => {
+                            res.data.token = localStorage.getItem(ACCESS_TOKEN);
+                            localStorage.setItem("user", JSON.stringify(res.data));
+
+                            console.log("redirecting to profile...");
+                            this.props.history.push(`/profile`);
+                            window.location.reload();
+                        });
                     } else {
+                        console.log("redirecting to username input page...");
                         this.props.history.push(`/usernameInput?email=${response.data.email}&firstName=${response.data.firstName}&secondName=${response.data.secondName}`);
                         window.location.reload();
                     }

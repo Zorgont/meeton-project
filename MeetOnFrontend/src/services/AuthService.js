@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AM_BASE_URL, API_BASE_URL, GOOGLE, GOOGLE_AUTH_URL } from "../constants/constant";
+import { ACCESS_TOKEN, AM_BASE_URL, API_BASE_URL, GOOGLE, GOOGLE_AUTH_URL } from "../constants/constant";
 import authNewHeader from "./AuthNewHeader";
 import UserService from "./UserService";
 
@@ -61,6 +61,8 @@ class AuthService {
 
     logout() {
         localStorage.removeItem("user");
+        localStorage.removeItem("username");
+        localStorage.removeItem(ACCESS_TOKEN);
     }
 
     register(username, email, password) {

@@ -9,7 +9,7 @@ import GoogleLogin from "react-google-login";
 
 import AuthService from "../services/AuthService";
 import UserService from "../services/UserService";
-import { GOOGLE, GOOGLE_AUTH_URL } from "../constants/constant";
+import { GITHUB_AUTH_URL, GOOGLE, GOOGLE_AUTH_URL } from "../constants/constant";
 
 const required = value => {
     if (!value) {
@@ -159,6 +159,21 @@ export default class NewLoginComponent extends Component {
                                     }}/> */}
                                     <div>
                                         <a className="btn btn-danger raleway custom-paragraph" href={GOOGLE_AUTH_URL} style={{width: "100%", backgroundColor: "#CD5642", marginLeft: "8px", marginRight: "-8px"}}><i class="fa fa-google" style={{color: "white", marginRight: "10px"}}/>Join using Google</a>
+                                    </div>
+                            </div>
+                        </div>
+                        <div className="row mb-4">
+                            <div className="col">
+                                {/* <GoogleLogin
+                                    clientId="9387373968-sqc6916e9o8h2usu5p981bdaj4sr4lu9.apps.googleusercontent.com"
+                                    onSuccess={this.onSuccessfulGoogleAuthorization}
+                                    onFailure={this.onFailureGoogleAuthorization}
+                                    cookiePolicy={'single_host_origin'}
+                                    render = {renderProps => {
+                                        return <button className="btn btn-danger raleway custom-paragraph" onClick={renderProps.onClick} style={{width: "100%", backgroundColor: "#CD5642", marginLeft: "8px", marginRight: "-8px"}}><i class="fa fa-google" style={{color: "white", marginRight: "10px"}}/>Join using Google</button>
+                                    }}/> */}
+                                    <div>
+                                        <a className="btn raleway custom-paragraph" href={GITHUB_AUTH_URL} style={{width: "100%", backgroundColor: "#666", marginLeft: "8px", marginRight: "-8px", color: "white"}}><i class="fa fa-github" style={{color: "white", marginRight: "10px"}}/>Join using GitHub</a>
                                     </div>
                             </div>
                         </div>

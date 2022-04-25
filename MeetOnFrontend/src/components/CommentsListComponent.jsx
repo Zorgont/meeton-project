@@ -44,9 +44,9 @@ export default class CommentsList extends Component{
                 {!this.props.comments.isEmpty?this.props.comments.map(
                 comment =>
                     <div className="container mt-4" style={{border: "1px solid #ddd", borderRadius: "10px"}}>
-                    <Link to={`/users/${comment.user_id}`} style={{textDecoration: "none", color: "black"}}>
+                    <Link to={`/users/${comment.username}`} style={{textDecoration: "none", color: "black"}}>
                         <div className="row mt-2">
-                            <div className="col-2"><Avatar src={API_BASE_URL + `/api/v1/users/${comment.user_id}/avatar`}/></div>
+                            <div className="col-2"><Avatar src={API_BASE_URL + `/api/v1/users/${comment.username}/avatar`}/></div>
                             <div className="col-3 mt-2" style={{marginLeft: "5px"}}>
                                 <div>
                                     <p>{comment.username}</p>

@@ -113,14 +113,14 @@ public class UserController {
         }
 
     }
-    @GetMapping(value = "/{userId}/avatar")
-    public ResponseEntity<?> getUserAvatar(@PathVariable Long userId) {
+    @GetMapping(value = "/{username}/avatar")
+    public ResponseEntity<?> getUserAvatar(@PathVariable String username) {
         try {
-            ImageModel userAvatar = imageModelService.getUserAvatar(userId);
-            return ResponseEntity.ok().cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES)).contentType(MediaType.valueOf(userAvatar.getType())).contentLength(userAvatar.getPic().length).body(imageModelService.getUserAvatar(userId).getPic());
+            ImageModel userAvatar = imageModelService.getUserAvatar(username);
+            return ResponseEntity.ok().cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES)).contentType(MediaType.valueOf(userAvatar.getType())).contentLength(userAvatar.getPic().length).body(userAvatar.getPic());
         }
         catch (Exception e) {
-            System.out.println("Cannot get avatar for user " + userId);
+            System.out.println("Cannot get avatar for user " + username);
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
     }

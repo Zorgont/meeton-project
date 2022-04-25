@@ -14,8 +14,8 @@ public class ImageModelServiceImpl implements ImageModelService {
     private final UserService userService;
     private final ImageModelRepository imageModelRepository;
     @Override
-    public ImageModel getUserAvatar(Long userId) {
-        return userService.getUserById(userId).getAvatar();
+    public ImageModel getUserAvatar(String username) {
+        return userService.getUserByName(username).getAvatar();
     }
 
     @Override
