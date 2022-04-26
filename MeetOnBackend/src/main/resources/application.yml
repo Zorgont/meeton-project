@@ -1,6 +1,8 @@
 spring:
   application:
     name: meeton-core
+  main:
+    allow-circular-references: true
   datasource:
     url: jdbc:postgresql://localhost:5432/meeton
     username: root
