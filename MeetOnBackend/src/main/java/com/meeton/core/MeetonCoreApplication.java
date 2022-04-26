@@ -10,9 +10,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableEurekaClient
 @EnableScheduling
 @EnableAsync
-public class MeetontestApplication {
+public class MeetonCoreApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MeetontestApplication.class, args);
+        SpringApplication.run(MeetonCoreApplication.class, args);
 
     }
 

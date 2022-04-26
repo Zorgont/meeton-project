@@ -22,5 +22,9 @@ eureka:
   instance:
     hostname: localhost
 
+logging:
+  level:
+    org.springframework: TRACE
+
 server:
   port: 8989

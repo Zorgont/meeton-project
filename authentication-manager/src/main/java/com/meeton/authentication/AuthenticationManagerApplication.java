@@ -2,10 +2,12 @@ package com.meeton.authentication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
-public class SpringLogin {
+@EnableEurekaClient
+public class AuthenticationManagerApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(SpringLogin.class, args);
+		SpringApplication.run(AuthenticationManagerApplication.class, args);
 	}
 }

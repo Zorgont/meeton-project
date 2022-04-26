@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @SpringBootTest
-class MeetontestApplicationTests {
+class MeetonCoreApplicationTests {
 
 
     @Test
