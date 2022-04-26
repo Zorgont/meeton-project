@@ -23,7 +23,7 @@ class MeetingCardComponent extends Component {
             <div className="container" style={{cursor: "pointer", height: height, borderRadius: "20px", backgroundImage: "linear-gradient(rgba(255,255,255,.8), rgba(255,255,255,.8)), url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80')", backgroundSize: "cover"}}>
                 <Link to={`/users/${meeting.managerUsername}`} style={{textDecoration: "none", color: "black"}}>
                     <div className="row">
-                        <div className="col-2 mt-2 justify-content-center"><Avatar src={API_BASE_URL + `/api/v1/users/${meeting.managerUsername}/avatar`}/></div>
+                        <div className="col-2 mt-2 justify-content-center"><Avatar src={API_BASE_URL + `/meeton-core/v1/users/${meeting.managerUsername}/avatar`}/></div>
                         <div className="col-10 mt-3">
                             <div>
                                 <p>{this.props.meeting.managerUsername}</p>

@@ -292,7 +292,7 @@ export default class NewMeetingPage extends Component{
                                     </div>
                                     <Link to={`/users/${meeting.managerUsername}`} style={{textDecoration: "none", color: "black"}}>
                                         <div className="row">
-                                            <div className="col-2"><Avatar src={`http://localhost:8080/api/v1/users/${meeting.managerUsername}/avatar`}/></div>
+                                            <div className="col-2"><Avatar src={`http://localhost:8080/meeton-core/v1/users/${meeting.managerUsername}/avatar`}/></div>
                                             <div className="col-9 mt-2" style={{marginLeft: "5px"}}>
                                                 <div>
                                                     <p>{meeting.managerUsername}</p>
@@ -391,9 +391,9 @@ export default class NewMeetingPage extends Component{
                                     <div className="row">
                                         <div className="col mb-2">
                                             {participants?.map(participant => 
-                                                <Link to={`/users/${participant.user_id}`} style={{textDecoration: "none", color: "black"}}>
+                                                <Link to={`/users/${participant.username}`} style={{textDecoration: "none", color: "black"}}>
                                                 <div className="row">
-                                                    <div className="col-2"><Avatar src={`http://localhost:8080/api/v1/users/${participant.user_id}/avatar`}/></div>
+                                                    <div className="col-2"><Avatar src={`http://localhost:8080/meeton-core/v1/users/${participant.username}/avatar`}/></div>
                                                     <div className="col-9 mt-2" style={{marginLeft: "5px"}}>
                                                         <div>
                                                             <p>{participant.username}</p>

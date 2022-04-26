@@ -2,7 +2,7 @@ import axios from 'axios'
 import authHeader from "./AuthHeader";
 import { API_BASE_URL } from '../constants/constant';
 
-const MEETING_API_BASE_URL = API_BASE_URL + "/api/v1/meetings";
+const MEETING_API_BASE_URL = API_BASE_URL + "/meeton-core/v1/meetings";
 class MeetingService {
     getMeetings() {
         return axios.get(MEETING_API_BASE_URL);

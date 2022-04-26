@@ -155,7 +155,7 @@ export default class ProfileSettingsComponent extends Component {
                             <div className="row">
                                 <div className="col d-flex justify-content-center">
                                     <div style={{position: "relative"}}>
-                                        <Avatar style={{width: "130px", height: "130px"}} src={API_BASE_URL + `/api/v1/users/${this.state.currentUser?.username}/avatar`}/>
+                                        <Avatar style={{width: "130px", height: "130px"}} src={API_BASE_URL + `/meeton-core/v1/users/${this.state.currentUser?.username}/avatar`}/>
                                     </div>
                                 </div>
                             <h4 className="text-center">{this.state.currentUser.username}</h4>

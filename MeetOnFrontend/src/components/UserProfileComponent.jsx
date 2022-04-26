@@ -9,7 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import UserService from "../services/UserService";
 import TagGroupService from "../services/TagGroupService";
 import MeetingCardComponent from "./MeetingCardComponent";
-import { ACCESS_TOKEN, API_BASE_URL } from '../constants/constant';
+import { API_BASE_URL } from '../constants/constant';
 
 export default class UserProfileComponent extends Component {
     constructor(props) {
@@ -26,14 +26,20 @@ export default class UserProfileComponent extends Component {
     }
 
     componentDidMount() {
-        let res = JSON.parse(localStorage.getItem('user'));
-        this.setState({currentUser: res});
+        let currentUser = JSON.parse(localStorage.getItem('user'));
+        this.setState({currentUser: currentUser});
         console.log(this.props.match.params)
-        let username = this.props.match.params.username ? this.props.match.params.username : res.username;
+        let username = this.props.match.params.username ? this.props.match.params.username : currentUser.username;
+        if (this.props.match.params?.username && this.props.match.params.username === currentUser?.username) {
+            console.log("redirecting to profile...");
+            this.props.history.push(`/profile`);
+            window.location.reload();
+        }
+
         console.log("current username is: %s", username)
         UserService.getUserByUsername(username).then(res => {
             this.setState({user: res.data});
-            if (username === res.data.username) {
+            if (currentUser.username === res.data.username) {
                 localStorage.setItem("user", JSON.stringify(res.data));
             }
 
@@ -93,7 +99,7 @@ export default class UserProfileComponent extends Component {
                                 <div className="row">
                                     <div className="col d-flex justify-content-center">
                                         <div style={{position: "relative"}}>
-                                            <Avatar style={{width: "130px", height: "130px"}} src={this.state.user !== null ? API_BASE_URL + `/api/v1/users/${this.state.user?.username}/avatar` : ""}/>
+                                            <Avatar style={{width: "130px", height: "130px"}} src={this.state.user !== null ? API_BASE_URL + `/meeton-core/v1/users/${this.state.user?.username}/avatar` : ""}/>
                                             {user?.id === this.state.currentUser?.id && <div onClick={this.editProfileClicked.bind(this)} style={{position: "absolute", right: "12px", width: "30px", height: "30px", bottom: "-5px", backgroundColor: "white", borderRadius: "50px", cursor: "pointer"}} className="gradient-gray-border">
                                                 <EditOutlinedIcon style={{margin: "0 0 0 3px"}} />
                                             </div>}

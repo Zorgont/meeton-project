@@ -2,7 +2,7 @@ import axios from 'axios'
 import { API_BASE_URL } from '../constants/constant';
 import authHeader from "./AuthHeader";
 
-const USER_API_BASE_URL = API_BASE_URL + "/api/v1/users";
+const USER_API_BASE_URL = API_BASE_URL + "/meeton-core/v1/users";
 class UserService {
     getUsers() {
         return axios.get(USER_API_BASE_URL,{ headers: authHeader() });

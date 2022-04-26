@@ -3,21 +3,21 @@ import { ACCESS_TOKEN, AM_BASE_URL, API_BASE_URL, GOOGLE, GOOGLE_AUTH_URL } from
 import authHeader from "./AuthHeader";
 import UserService from "./UserService";
 
-const API_URL = API_BASE_URL + "/api/v1/auth/";
-const AM_URL = AM_BASE_URL + "/";
+const API_URL = API_BASE_URL + "/meeton-core/v1/auth/";
+const AM_URL = AM_BASE_URL + "/authentication-manager/v1/auth";
 
 class AuthService {
     getNewCurrentUser() {
-        return axios.get(AM_BASE_URL + '/profile', { headers: authHeader() });
+        return axios.get(AM_URL + '/profile', { headers: authHeader() });
     }
     updateUsername(username) {
-        console.log(AM_BASE_URL + '/updateUsername?username=' + username)
-        return axios.get(AM_BASE_URL + '/updateUsername?username=' + username, { headers: authHeader() });
+        console.log(AM_URL + '/updateUsername?username=' + username)
+        return axios.get(AM_URL + '/updateUsername?username=' + username, { headers: authHeader() });
     }
 
     login(username, password) {
         return axios
-            .post(AM_URL + "signin", {
+            .post(AM_URL + "/signin", {
                 username,
                 password
             })
@@ -26,11 +26,6 @@ class AuthService {
                 localStorage.setItem("user", JSON.stringify(res.data.user));
                 localStorage.setItem(ACCESS_TOKEN, res.data.token);
                 return res.data;
-                // UserService.getUserByUsername(res.data.username).then(userRes => {
-                //     console.log(JSON.stringify(userRes.data));
-                //     localStorage.setItem("user", JSON.stringify(userRes.data));
-                //     return userRes.data;
-                // })
             });
     }
 
@@ -63,7 +58,7 @@ class AuthService {
     }
 
     register(username, email, password) {
-        return axios.post(AM_URL + "signup", {
+        return axios.post(AM_URL + "/signup", {
             username,
             email,
             password

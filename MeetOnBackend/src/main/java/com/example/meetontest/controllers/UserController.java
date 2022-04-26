@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(path = "api/v1/users")
+@RequestMapping(path = "meeton-core/v1/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(path = "api/v1/platforms")
+@RequestMapping(path = "meeton-core/v1/platforms")
 @RequiredArgsConstructor
 public class PlatformController {
     private final PlatformService platformService;

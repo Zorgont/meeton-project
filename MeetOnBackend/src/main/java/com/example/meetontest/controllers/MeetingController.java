@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(path = "api/v1/meetings")
+@RequestMapping(path = "meeton-core/v1/meetings")
 @RequiredArgsConstructor
 public class MeetingController {
     private final MeetingService meetingService;

@@ -20,7 +20,7 @@ import java.text.ParseException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v1/score")
+@RequestMapping("/meeton-core/v1/score")
 @RequiredArgsConstructor
 public class ScoreController {
     private final ScoreService scoreService;

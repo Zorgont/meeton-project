@@ -11,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(path = "api/v1/tags")
+@RequestMapping(path = "meeton-core/v1/tags")
 @RequiredArgsConstructor
 public class TagController {
     private final TagService tagService;

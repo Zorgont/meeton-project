@@ -2,7 +2,7 @@ import axios from 'axios'
 import authHeader from "./AuthHeader";
 import { API_BASE_URL } from '../constants/constant';
 
-const REQUEST_API_BASE_URL = API_BASE_URL + "/api/v1/requests";
+const REQUEST_API_BASE_URL = API_BASE_URL + "/meeton-core/v1/requests";
 
 class RequestService{
     createRequest(request) {

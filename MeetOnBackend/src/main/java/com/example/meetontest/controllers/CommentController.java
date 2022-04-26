@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(path = "api/v1/comments")
+@RequestMapping(path = "meeton-core/v1/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;

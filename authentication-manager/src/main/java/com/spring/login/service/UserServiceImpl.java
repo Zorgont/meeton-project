@@ -12,23 +12,18 @@ import com.spring.login.security.oauth2.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -110,6 +105,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setName(user.getName());
             existingUser.setEmail(user.getEmail());
             existingUser.setImageUrl(user.getImageUrl());
+            existingUser.setValid(user.isValid());
             user = existingUser;
         }
 
@@ -131,7 +127,7 @@ public class UserServiceImpl implements UserService {
             String json = ow.writeValueAsString(user);
 
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
-            ResponseEntity<String> response = new RestTemplate().postForEntity(URI.create(appConfig.getMeetonCoreUrl() + "/api/v1/auth/signup"), entity, String.class);
+            ResponseEntity<String> response = new RestTemplate().postForEntity(URI.create(appConfig.getMeetonCoreUrl() + "/meeton-core/v1/auth/signup"), entity, String.class);
             log.info("Notification successfully transmitted!");
         } catch (Exception e) {
             log.info("Notification processing failed! Details: {}", e.getMessage());

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(path = "api/v1/notifications")
+@RequestMapping(path = "meeton-core/v1/notifications")
 @RequiredArgsConstructor
 public class NotificationStatusController {
     private final NotificationService notificationService;

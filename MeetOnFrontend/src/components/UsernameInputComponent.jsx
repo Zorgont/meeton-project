@@ -4,6 +4,8 @@ import CheckButton from "react-validation/build/button";
 import AuthService from "../services/AuthService";
 import TextField from '@material-ui/core/TextField';
 import RegistrationStepperComponent from './RegistrationStepperComponent';
+import UserService from '../services/UserService';
+import { ACCESS_TOKEN } from '../constants/constant';
 
 class UsernameInputComponent extends Component {
     constructor(props) {
@@ -56,9 +58,14 @@ class UsernameInputComponent extends Component {
         if (this.checkBtn.context._errors.length === 0) {
             AuthService.updateUsername(this.state.username).then(
                 response => {
-                    localStorage.setItem("username", response.data.username)
-                    this.props.history.push("/profile");
-                    window.location.reload();
+                    UserService.getUserByUsername(response.data.username).then(res => {
+                        res.data.token = localStorage.getItem(ACCESS_TOKEN);
+                        localStorage.setItem("user", JSON.stringify(res.data));
+
+                        console.log("redirecting to profile...");
+                        this.props.history.push(`/profile`);
+                        window.location.reload();
+                    });
                 },
                 error => {
                     console.log(error)
@@ -77,26 +84,7 @@ class UsernameInputComponent extends Component {
                         messageOccured: this.state.message === ""
                     })
                 }
-            ) 
-            // AuthService.loginViaGoogle(user).then(
-            //     () => {
-            //         this.props.history.push("/profile");
-            //         window.location.reload();
-            //     },
-            //     error => {
-            //         const resMessage =
-            //             (error.response &&
-            //                 error.response.data &&
-            //                 error.response.data.message) ||
-            //             error.message ||
-            //             error.toString();
-    
-            //         this.setState({
-            //             loading: false,
-            //             message: resMessage
-            //         });
-            //     }
-            // );
+            );
         } else {
             this.setState({
                 loading: false

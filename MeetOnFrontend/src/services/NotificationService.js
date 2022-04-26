@@ -2,7 +2,7 @@ import axios from 'axios'
 import authHeader from "./AuthHeader";
 import { API_BASE_URL } from '../constants/constant';
 
-const NOTIFICATION_API_BASE_URL = API_BASE_URL + "/api/v1/notifications";
+const NOTIFICATION_API_BASE_URL = API_BASE_URL + "/meeton-core/v1/notifications";
 class NotificatoinService {
     getNotificationsByUser(userId) {
         console.log(NOTIFICATION_API_BASE_URL + '/byUser' + userId);
