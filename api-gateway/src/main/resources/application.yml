@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: meeton-core
+          uri: lb://meeton-core
+          predicates:
+            - Path=/meeton-core/**
+        - id: authentication-manager
+          uri: lb://authentication-manager
+          predicates:
+            - Path=/authentication-manager/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+server:
+  port: 8989
