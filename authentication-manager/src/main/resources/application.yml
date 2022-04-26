@@ -3,7 +3,7 @@ spring:
     mongodb:
       auto-index-creation: true
       authentication-database: admin
-      database: spring_login
+      database: authentication_users
       port: 27017
       host: localhost
   security:
