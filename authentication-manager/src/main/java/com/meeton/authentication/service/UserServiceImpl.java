@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final AppConfig appConfig;
+    private final RestTemplate restTemplate;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public UserDetails loadUserByEmail(String email) {
@@ -131,7 +132,7 @@ public class UserServiceImpl implements UserService {
             String json = ow.writeValueAsString(user);
 
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
-            ResponseEntity<String> response = new RestTemplate().postForEntity(URI.create(appConfig.getMeetonCoreUrl() + "/meeton-core/v1/auth/signup"), entity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(URI.create(appConfig.getMeetonCoreUrl() + "/meeton-core/v1/auth/signup"), entity, String.class);
             log.info("Notification successfully transmitted!");
         } catch (Exception e) {
             log.info("Notification processing failed! Details: {}", e.getMessage());

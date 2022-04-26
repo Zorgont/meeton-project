@@ -7,11 +7,17 @@ spring:
         - id: meeton-core
           uri: lb://meeton-core
           predicates:
-            - Path=/meeton-core/**
+            - Path=/meeton-core/**,/ws/**
         - id: authentication-manager
           uri: lb://authentication-manager
           predicates:
-            - Path=/authentication-manager/**
+            - Path=/authentication-manager/**,/oauth2/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedHeaders: "*"
+            allowedMethods: "*"
 
 eureka:
   client:
@@ -24,7 +30,7 @@ eureka:
 
 logging:
   level:
-    org.springframework: TRACE
+    org.springframework: DEBUG
 
 server:
   port: 8989

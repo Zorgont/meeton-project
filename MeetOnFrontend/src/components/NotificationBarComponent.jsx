@@ -12,7 +12,7 @@ import NotificationsNoneOutlinedIcon from '@material-ui/icons/NotificationsNoneO
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import SockJsClient from 'react-stomp'
-import { API_BASE_URL } from '../constants/constant';
+import { WS_BASE_URL } from '../constants/constant';
 
 export default class TemporaryDrawer extends React.Component{
   constructor(props) {
@@ -132,7 +132,7 @@ export default class TemporaryDrawer extends React.Component{
           </Snackbar>
         </div>
           <SockJsClient
-              url={API_BASE_URL + `/ws`}
+              url={WS_BASE_URL + `/ws`}
               topics={[`/user/${this.state.currentUser.id}/queue/notify`]}
               onMessage={(notification) => this.handleNotification(notification)} />
       </div>

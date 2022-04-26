@@ -18,7 +18,7 @@ import Chip from '@material-ui/core/Chip';
 import DoneOutlinedIcon from '@material-ui/icons/DoneOutlined';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import Avatar from '@material-ui/core/Avatar';
-import { API_BASE_URL } from '../constants/constant';
+import { API_BASE_URL, WS_BASE_URL } from '../constants/constant';
 
 export default class NewMeetingPage extends Component{
     constructor(props) {
@@ -102,7 +102,7 @@ export default class NewMeetingPage extends Component{
             return <div>
                 <CommentsList comments={this.state.comments} onCommentChange={this.addComment.bind(this)}/>
                 <SockJsClient
-                    url={API_BASE_URL + `/ws`}
+                    url={WS_BASE_URL + `/ws`}
                     topics={[`/meeting/${this.state.meeting.meetingId}/queue/comments`]}
                     onMessage={(comment) => this.handleComment(comment)}
                     ref={ (client) => { this.clientRef = client }}/>
@@ -292,7 +292,7 @@ export default class NewMeetingPage extends Component{
                                     </div>
                                     <Link to={`/users/${meeting.managerUsername}`} style={{textDecoration: "none", color: "black"}}>
                                         <div className="row">
-                                            <div className="col-2"><Avatar src={`http://localhost:8080/meeton-core/v1/users/${meeting.managerUsername}/avatar`}/></div>
+                                            <div className="col-2"><Avatar src={`${API_BASE_URL}/meeton-core/v1/users/${meeting.managerUsername}/avatar`}/></div>
                                             <div className="col-9 mt-2" style={{marginLeft: "5px"}}>
                                                 <div>
                                                     <p>{meeting.managerUsername}</p>
@@ -393,7 +393,7 @@ export default class NewMeetingPage extends Component{
                                             {participants?.map(participant => 
                                                 <Link to={`/users/${participant.username}`} style={{textDecoration: "none", color: "black"}}>
                                                 <div className="row">
-                                                    <div className="col-2"><Avatar src={`http://localhost:8080/meeton-core/v1/users/${participant.username}/avatar`}/></div>
+                                                    <div className="col-2"><Avatar src={`${API_BASE_URL}/meeton-core/v1/users/${participant.username}/avatar`}/></div>
                                                     <div className="col-9 mt-2" style={{marginLeft: "5px"}}>
                                                         <div>
                                                             <p>{participant.username}</p>
