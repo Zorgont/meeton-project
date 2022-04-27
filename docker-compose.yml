@@ -8,6 +8,21 @@ services:
       - '/MeetOnFrontend/app/node_modules'
     ports:
       - 3000:3000
+
+  meeton-eureka:
+    image: 'meeton-eureka:latest'
+    ports:
+      - "8761:8761"
+
+  meeton-apg:
+    image: 'meeton-apg:latest'
+    ports:
+      - "8989:8989"
+    depends_on:
+      - meeton-eureka
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://meeton-eureka:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: meeton-apg
       
   meeton-core:
     image: 'meeton-core:latest'
@@ -15,11 +30,14 @@ services:
       - "8080:8080"
     depends_on:
       - db
+      - meeton-eureka
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/meeton
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      eureka.client.serviceUrl.defaultZone: http://meeton-eureka:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: meeton-core
+      spring.datasource.url: jdbc:postgresql://db:5432/meeton
+      spring.datasource.username: root
+      spring.datasource.password: root
+      spring.jpa.hibernate.ddl-auto: update
 
   meeton-am:
     image: 'meeton-am:latest'
@@ -27,14 +45,17 @@ services:
       - "8081:8080"
     depends_on:
       - mongo
+      - meeton-eureka
     environment:
-      - SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE=admin
-      - SPRING_DATA_MONGODB_AUTO_INDEX_CREATION=true
-      - SPRING_DATA_MONGODB_DATABASE=am-local
-      - SPRING_DATA_MONGODB_HOST=mongo
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATA_MONGODB_USERNAME=root
-      - SPRING_DATA_MONGODB_PASSWORD=rootpassword
+      eureka.client.serviceUrl.defaultZone: http://meeton-eureka:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: meeton-am
+      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+      SPRING_DATA_MONGODB_AUTO_INDEX_CREATION: 'true'
+      SPRING_DATA_MONGODB_DATABASE: am-local
+      SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_USERNAME: root
+      SPRING_DATA_MONGODB_PASSWORD: rootpassword
 
   db:
     image: 'postgres:13.1-alpine'
