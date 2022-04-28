@@ -70,7 +70,8 @@ class AuthService {
 
     }
     confirmUser(token) {
-        return axios.get(API_URL + "confirmAccount?token=" + token)
+        console.log("herhrerer")
+        return axios.get(AM_URL + "/confirmAccount?token=" + token)
     }
 }
 

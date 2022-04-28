@@ -58,4 +58,10 @@ public class UserController {
         }
         return user;
     }
+
+    @RequestMapping(value="/confirmAccount", method= {RequestMethod.GET, RequestMethod.POST})
+    public ResponseEntity<?> confirmUserAccount(@RequestParam String token){
+        userService.confirmUser(token);
+        return ResponseEntity.ok("Registration completed!");
+    }
 }

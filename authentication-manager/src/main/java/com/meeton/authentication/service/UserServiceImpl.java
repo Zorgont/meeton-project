@@ -12,10 +12,10 @@ import com.meeton.authentication.security.TokenProvider;
 import com.meeton.authentication.security.UserPrincipal;
 import com.meeton.authentication.security.oauth2.CustomOAuth2UserService;
 import com.meeton.authentication.model.*;
-import com.meeton.authentication.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.utils.URIBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,9 +25,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -81,8 +84,9 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .username(signUpRequest.getUsername())
                 .email(signUpRequest.getEmail())
+                .confirmationToken(UUID.randomUUID().toString())
                 // todo: Add e-mail verification
-                .emailVerified(true)
+                .emailVerified(false)
                 .password(encoder.encode(signUpRequest.getPassword()))
                 .provider(AuthProvider.platform)
                 .build();
@@ -94,6 +98,9 @@ public class UserServiceImpl implements UserService {
         if (!user.getUsername().equals(CustomOAuth2UserService.MOCK_USERNAME)) {
             if (user.getProvider().equals(AuthProvider.platform)) {
                 user.setValid(user.getEmailVerified());
+                if (!user.isValid()) {
+                    sendConfirmationUserNotification(user);
+                }
             } else {
                 user.setValid(!StringUtils.isEmpty(user.getUsername()));
             }
@@ -116,14 +123,22 @@ public class UserServiceImpl implements UserService {
 
         user = userRepository.save(user);
         if (user.isValid()) {
-            sendNotification(user);
+            sendNewUserNotification(user);
         }
 
         return user;
     }
 
+    @Override
+    public void confirmUser(String token) {
+        User user = userRepository.findByConfirmationToken(token).get();
+        user.setConfirmationToken(null);
+        user.setEmailVerified(true);
+        save(user);
+    }
+
     @SneakyThrows
-    private void sendNotification(User user) {
+    private void sendNewUserNotification(User user) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -134,6 +149,28 @@ public class UserServiceImpl implements UserService {
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
             ResponseEntity<String> response = restTemplate.postForEntity(URI.create(appConfig.getMeetonCoreUrl() + "/meeton-core/v1/auth/signup"), entity, String.class);
             log.info("Notification successfully transmitted!");
+        } catch (Exception e) {
+            log.info("Notification processing failed! Details: {}", e.getMessage());
+        }
+    }
+
+    @SneakyThrows
+    private void sendConfirmationUserNotification(User user) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            String body = "<p>To confirm your account, please click here</p><br><a href='https://localhost:3000/confirm?token=" + user.getConfirmationToken().toString() + "'>Click here!</a>";
+
+            URI uri = new URIBuilder(appConfig.getMeetonCoreUrl() + "/notification-manager/v1/notification/email")
+                    .addParameter("email", user.getEmail())
+                    .addParameter("subject", "Confirm your account")
+                    .build();
+
+            HttpEntity<String> entity = new HttpEntity<>(body, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity(uri, entity, String.class);
+            log.info("Notification successfully transmitted!");
+            log.debug(response.toString());
         } catch (Exception e) {
             log.info("Notification processing failed! Details: {}", e.getMessage());
         }

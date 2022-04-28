@@ -78,6 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/",
                         "/authentication-manager/v1/auth/signin",
                         "/authentication-manager/v1/auth/signup",
+                        "/authentication-manager/v1/auth/confirmAccount",
                         "/error",
                         "/favicon.ico",
                         "/**/*.png",

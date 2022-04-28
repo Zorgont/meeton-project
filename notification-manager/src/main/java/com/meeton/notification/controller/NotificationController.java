@@ -28,8 +28,8 @@ public class NotificationController {
         notificationService.createNotification(notificationConverter.convert(notification));
     }
 
-    @PostMapping("/user")
-    public void sendEmail(@RequestParam String email, @RequestParam String subject, @RequestParam String message) {
+    @PostMapping("/email")
+    public void sendEmail(@RequestParam String email, @RequestParam String subject, @RequestBody String message) {
         emailService.sendMessage(email, subject, message);
     }
 

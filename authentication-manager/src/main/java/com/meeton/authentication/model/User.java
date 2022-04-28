@@ -3,10 +3,10 @@ package com.meeton.authentication.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.util.StringUtils;
+
+import java.util.UUID;
 
 @Data
 @Builder
@@ -27,6 +27,7 @@ public class User {
     private String imageUrl;
 
     private Boolean emailVerified;
+    private String confirmationToken;
 
     @JsonIgnore
     private String password;

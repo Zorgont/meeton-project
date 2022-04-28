@@ -17,4 +17,5 @@ public interface UserService {
     User save(User user);
     User createUser(SignUpRequest signUpRequest);
     UserToken login(LoginRequest loginRequest);
+    void confirmUser(String token);
 }
