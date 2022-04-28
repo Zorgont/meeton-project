@@ -1,0 +1,35 @@
+@startuml
+
+node "Backend" {
+	interface REST as rest
+	interface Websocket as ws
+	[authentication-manager] as AM
+	[service-registry] as SR
+	[meeton-core] AS core
+	[api-gateway] AS APG
+}
+
+node "Frontend" {
+	[React.js] AS react
+}
+
+database "PostgreDB" {
+    [Core DB] as pgsql
+}
+
+database "MongoDB" {
+    [User DB] as mongo
+}
+
+react <--> rest
+react <--> ws
+rest <--> APG
+ws <--> APG
+APG <--> AM
+APG <--> SR
+APG <--> core
+SR <--> AM
+SR <--> core
+core .. pgsql
+AM .. mongo
+@enduml

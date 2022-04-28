@@ -1,17 +1,10 @@
 package com.meeton.core.sheduling;
 
 import com.meeton.core.entities.ConfirmationToken;
-import com.meeton.core.notifications.entities.EventEntity;
-import com.meeton.core.notifications.entities.EventStatus;
-import com.meeton.core.notifications.entities.Notification;
-import com.meeton.core.notifications.repositories.EventRepository;
-import com.meeton.core.notifications.repositories.NotificationRepository;
+import com.meeton.core.entities.EventEntity;
+import com.meeton.core.entities.EventStatus;
 import com.meeton.core.repositories.ConfirmationTokenRepository;
-import com.meeton.core.notifications.entities.EventEntity;
-import com.meeton.core.notifications.entities.EventStatus;
-import com.meeton.core.notifications.entities.Notification;
-import com.meeton.core.notifications.repositories.EventRepository;
-import com.meeton.core.notifications.repositories.NotificationRepository;
+import com.meeton.core.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,7 +19,6 @@ import java.util.stream.Collectors;
 public class DataBaseClearer {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EventRepository eventRepository;
-    private final NotificationRepository notificationRepository;
 
     @Scheduled(fixedDelay = 60000)
     private void clearEntity(){
@@ -41,9 +33,5 @@ public class DataBaseClearer {
         List<EventEntity> eventsToRemove = eventRepository.findByStatus(EventStatus.HANDLED).stream()
             .filter(event -> event.getDate().before(calendar.getTime())).collect(Collectors.toList());
         eventRepository.deleteAll(eventsToRemove);
-
-        calendar.add(Calendar.DATE, -6);
-        List<Notification> notificationsToRemove = notificationRepository.findAll().stream().filter(notification -> notification.getDate().before(calendar.getTime())).collect(Collectors.toList());
-        notificationRepository.deleteAll(notificationsToRemove);
     }
 }

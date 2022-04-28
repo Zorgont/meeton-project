@@ -1,6 +1,5 @@
 package com.meeton.core.services.impl;
 
-import com.meeton.core.dto.GoogleLoginRequest;
 import com.meeton.core.dto.JwtResponse;
 import com.meeton.core.dto.LoginRequest;
 import com.meeton.core.dto.SignupRequest;
@@ -8,21 +7,13 @@ import com.meeton.core.entities.ConfirmationToken;
 import com.meeton.core.entities.ERole;
 import com.meeton.core.entities.Role;
 import com.meeton.core.entities.User;
-import com.meeton.core.exceptions.ResourceNotFoundException;
 import com.meeton.core.exceptions.ValidatorException;
-import com.meeton.core.mail.EmailService;
 import com.meeton.core.repositories.RoleRepository;
 import com.meeton.core.repositories.UserRepository;
 import com.meeton.core.security.JwtUtils;
 import com.meeton.core.services.AuthService;
 import com.meeton.core.services.ConfirmationTokenService;
-import com.meeton.core.exceptions.ValidatorException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,13 +33,9 @@ public class AuthServiceImpl implements AuthService {
     final private AuthenticationManager authenticationManager;
     final private UserRepository userRepository;
     final private RoleRepository roleRepository;
-    final private EmailService emailService;
     final private ConfirmationTokenService confirmationTokenService;
     final private PasswordEncoder encoder;
     final private JwtUtils jwtUtils;
-
-//    @Value("${meeton.app.jwtValidation.google}")
-//    private String googleUrl;
 
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -67,37 +53,6 @@ public class AuthServiceImpl implements AuthService {
                 jwt, userDetails.getUsername(),
                 userDetails.getEmail(), roles);
     }
-
-//    @Override
-//    public JwtResponse authenticateUserViaGoogle(GoogleLoginRequest loginRequest) {
-//        // проверить токен
-//        if (!confirmGoogleToken(loginRequest.getAccessToken(), loginRequest.getEmail()))
-//            throw new ValidatorException("Error: Wrong access token!");
-//
-//        User user;
-//        if (!userRepository.existsByEmail(loginRequest.getEmail())) {
-//            if (userRepository.existsByUsername(loginRequest.getUsername()))
-//                throw new ValidatorException("This username is already taken!");
-//
-//            // зарегистрировать пользователя
-//            user = createUser(new SignupRequest(loginRequest.getUsername(), loginRequest.getEmail(), null, loginRequest.getAccessToken()));
-//            user.setFirstName(loginRequest.getFirstName());
-//            user.setSecondName(loginRequest.getSecondName());
-//            user.setIsEnabled(true);
-//            user.setStatus("oAuth2");
-//            userRepository.save(user);
-//        }
-//        else {
-//            user = userRepository.findByEmail(loginRequest.getEmail()).get();
-//            if (!user.getStatus().equals("oAuth2"))
-//                throw new ValidatorException("User already registered via platform registration. Please enter your username and password!");
-//        }
-//
-//        user.setPassword(encoder.encode(loginRequest.getAccessToken()));
-//        userRepository.save(user);
-//
-//        return authenticateUser(new LoginRequest(user.getUsername(), loginRequest.getAccessToken()));
-//    }
 
     public void registerUser(SignupRequest signUpRequest) throws ValidatorException {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -174,15 +129,6 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
         return userRepository.save(user);
     }
-
-//    private boolean confirmGoogleToken(String accessToken, String userEmail) {
-//        ResponseEntity<Map> response = new RestTemplate().getForEntity(googleUrl + accessToken, Map.class);
-//        if(response.getStatusCode() == HttpStatus.OK) {
-//            String email = response.getBody().getOrDefault("email", "").toString();
-//            return !(email.isEmpty()) && email.equals(userEmail);
-//        }
-//        return false;
-//    }
 
     @Transactional
     public void confirmUser(String token){

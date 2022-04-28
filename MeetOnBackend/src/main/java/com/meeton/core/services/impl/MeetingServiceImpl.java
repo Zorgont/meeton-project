@@ -2,20 +2,14 @@ package com.meeton.core.services.impl;
 
 import com.meeton.core.converters.MeetingConverter;
 import com.meeton.core.entities.*;
+import com.meeton.core.events.EventStoringService;
+import com.meeton.core.events.types.single.impl.MeetingChangedEvent;
 import com.meeton.core.exceptions.ResourceNotFoundException;
 import com.meeton.core.exceptions.ValidatorException;
-import com.meeton.core.notifications.events.single.impl.MeetingChangedEvent;
-import com.meeton.core.notifications.services.EventStoringService;
 import com.meeton.core.repositories.MeetingRepository;
 import com.meeton.core.services.*;
 import com.meeton.core.validators.MeetingValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.meeton.core.converters.MeetingConverter;
-import com.meeton.core.exceptions.ResourceNotFoundException;
-import com.meeton.core.exceptions.ValidatorException;
-import com.meeton.core.notifications.events.single.impl.MeetingChangedEvent;
-import com.meeton.core.notifications.services.EventStoringService;
-import com.meeton.core.validators.MeetingValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +27,6 @@ public class MeetingServiceImpl implements MeetingService {
     private final TagService tagService;
     private final MeetingValidator meetingValidator;
     private final EventStoringService eventStoringService;
-
 
     @Autowired
     private MeetingChangedEvent meetingChangedEvent;

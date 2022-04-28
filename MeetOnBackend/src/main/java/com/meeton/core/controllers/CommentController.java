@@ -45,7 +45,6 @@ public class CommentController {
         commentValidator.validate(commentDTO);
         simpMessagingTemplate.convertAndSend("/meeting/" + commentDTO.getMeeting_id() + "/queue/comments",
                 commentConverter.convertBack(commentService.create(commentConverter.convert(commentDTO))));
-
     }
 
 
@@ -63,15 +62,13 @@ public class CommentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeCommentById(@PathVariable Long id) {
-
-            return commentController.removeCommentByIdWithDTO(commentConverter.convertBack(commentService.getById(id)))?
-                    ResponseEntity.ok("Comment deleted!") :  ResponseEntity.badRequest().body(new MessageResponse("Wrong comment id!"));
-
+        return commentController.removeCommentByIdWithDTO(commentConverter.convertBack(commentService.getById(id))) ?
+                ResponseEntity.ok("Comment deleted!") : ResponseEntity.badRequest().body(new MessageResponse("Wrong comment id!"));
     }
+
     @CheckUserCompliance
-    public Boolean removeCommentByIdWithDTO(@DTO(name = "user_id") CommentDTO commentDTO){
+    public Boolean removeCommentByIdWithDTO(@DTO(name = "user_id") CommentDTO commentDTO) {
         commentService.removeById(commentDTO.getId());
         return true;
     }
-
 }

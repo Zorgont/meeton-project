@@ -9,21 +9,11 @@ spring:
     password: root
   jpa:
     generate-ddl: true
-  mail:
-    host: smtp.gmail.com\
-    port: 687
-    username: kirill.pet13@gmail.com
-    password: uecchpnypznhlycj
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
 
 app:
   jwtSecret: 926D96C90030DD58429D2751AC1BDBBC
   jwtExpirationMs: 864000000
+  api-gateway-url: http://API-GATEWAY
 
 eureka:
   client:
@@ -33,5 +23,3 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     hostname: localhost
-
-

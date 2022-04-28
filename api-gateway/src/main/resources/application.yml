@@ -7,11 +7,15 @@ spring:
         - id: meeton-core
           uri: lb://meeton-core
           predicates:
-            - Path=/meeton-core/**,/ws/**
+            - Path=/meeton-core/**,/ws/comment/**
         - id: authentication-manager
           uri: lb://authentication-manager
           predicates:
             - Path=/authentication-manager/**,/oauth2/**
+        - id: notification-manager
+          uri: lb://notification-manager
+          predicates:
+            - Path=/notification-manager/**,/ws/notification/**
       globalcors:
         cors-configurations:
           '[/**]':

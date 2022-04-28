@@ -102,7 +102,7 @@ export default class NewMeetingPage extends Component{
             return <div>
                 <CommentsList comments={this.state.comments} onCommentChange={this.addComment.bind(this)}/>
                 <SockJsClient
-                    url={WS_BASE_URL + `/ws`}
+                    url={WS_BASE_URL + `/ws/comment`}
                     topics={[`/meeting/${this.state.meeting.meetingId}/queue/comments`]}
                     onMessage={(comment) => this.handleComment(comment)}
                     ref={ (client) => { this.clientRef = client }}/>

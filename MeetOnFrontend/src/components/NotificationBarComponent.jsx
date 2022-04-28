@@ -132,7 +132,7 @@ export default class TemporaryDrawer extends React.Component{
           </Snackbar>
         </div>
           <SockJsClient
-              url={WS_BASE_URL + `/ws`}
+              url={WS_BASE_URL + `/ws/notification`}
               topics={[`/user/${this.state.currentUser.id}/queue/notify`]}
               onMessage={(notification) => this.handleNotification(notification)} />
       </div>
