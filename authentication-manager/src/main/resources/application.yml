@@ -15,14 +15,15 @@ spring:
           google:
             client-id: 9387373968-013ktbioq3s0remtt09mgmpup4lv996g.apps.googleusercontent.com
             client-secret: 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
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            # todo: change localhost to public api-gateway url after deploying
+            redirectUri: "http://localhost:8989/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           github:
             client-id: Iv1.043f3e4e6820d9c2
             client-secret: 6505f5b8566fc4099f7f4e8f0bafb68015bd2082
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            redirectUri: "http://localhost:8989/oauth2/callback/{registrationId}"
             scope:
               - user:email
               - read:user

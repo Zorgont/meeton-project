@@ -42,7 +42,8 @@ services:
   meeton-am:
     image: 'meeton-am:latest'
     ports:
-      - "8081:8080"
+      - "8081:8081"
+      - "5005:5005"
     depends_on:
       - mongo
       - meeton-eureka
@@ -51,7 +52,7 @@ services:
       EUREKA_INSTANCE_HOSTNAME: meeton-am
       SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
       SPRING_DATA_MONGODB_AUTO_INDEX_CREATION: 'true'
-      SPRING_DATA_MONGODB_DATABASE: am-local
+      SPRING_DATA_MONGODB_DATABASE: am-users
       SPRING_DATA_MONGODB_HOST: mongo
       SPRING_DATA_MONGODB_PORT: 27017
       SPRING_DATA_MONGODB_USERNAME: root
