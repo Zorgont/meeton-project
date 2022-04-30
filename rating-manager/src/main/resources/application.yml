@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: rating-manager
+  data:
+    mongodb:
+      auto-index-creation: true
+      authentication-database: admin
+      database: rm-rating_weights
+      port: 27017
+      host: localhost
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    instance:
+      hostname: localhost
+
+app:
+  api-gateway-url: http://API-GATEWAY
+
+server:
+  port: 8083

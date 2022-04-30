@@ -8,6 +8,8 @@ cd ../service-registry
 source build.sh
 cd ../notification-manager
 source build.sh
+cd ../rating-manager
+source build.sh
 cd ../MeetOnFrontend
 source build.sh
 

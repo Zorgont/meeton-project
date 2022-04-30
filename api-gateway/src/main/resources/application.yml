@@ -16,6 +16,10 @@ spring:
           uri: lb://notification-manager
           predicates:
             - Path=/notification-manager/**,/ws/notification/**
+        - id: rating-manager
+          uri: lb://rating-manager
+          predicates:
+            - Path=/rating-manager/**
       globalcors:
         cors-configurations:
           '[/**]':
