@@ -22,8 +22,8 @@ public class MeetingAttendanceUserRatingComponent implements UserRatingComponent
             RatingWeight ratingWeight = ratingWeightRepository.findByType(RatingWeightType.MEETING_ATTENDANCE).get();
             int totalParticipantsCount = userComponents.getMeetingComponents().stream()
                     .mapToInt(MeetingComponents::getParticipantCount).sum();
-
-            return totalParticipantsCount * ratingWeight.getValue();
+            double result = totalParticipantsCount * ratingWeight.getValue();
+            return Double.isNaN(result) ? 0 : result;
         } catch (Exception e) {
             log.error("Couldn't calculate meeting attendance for user {}. Details: {}", userComponents.getId(), e.getMessage());
             return 0;

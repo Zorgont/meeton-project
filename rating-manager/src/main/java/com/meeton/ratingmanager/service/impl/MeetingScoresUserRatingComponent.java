@@ -30,7 +30,8 @@ public class MeetingScoresUserRatingComponent implements UserRatingComponent {
                                     meeting.getScoresSum(), meeting.getScoresCount(), minScoreValue, maxScoreValue))
                     .sum();
 
-            return sum * ratingWeight.getValue();
+            double result = sum * ratingWeight.getValue();
+            return Double.isNaN(result) ? 0 : result;
         } catch (Exception e) {
             log.error("Couldn't calculate meeting scores for user {}. Details: {}", userComponents.getId(), e.getMessage());
             return 0;

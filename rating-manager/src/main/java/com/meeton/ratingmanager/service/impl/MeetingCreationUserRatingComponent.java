@@ -20,8 +20,8 @@ public class MeetingCreationUserRatingComponent implements UserRatingComponent {
         try {
             RatingWeight ratingWeight = ratingWeightRepository.findByType(RatingWeightType.MEETING_CREATION).get();
             long totalMeetingsCount = userComponents.getMeetingComponents().stream().count();
-
-            return totalMeetingsCount * ratingWeight.getValue();
+            double result =  totalMeetingsCount * ratingWeight.getValue();
+            return Double.isNaN(result) ? 0 : result;
         } catch (Exception e) {
             log.error("Couldn't calculate meeting creation for user {}. Details: {}", userComponents.getId(), e.getMessage());
             return 0;
