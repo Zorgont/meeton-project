@@ -25,7 +25,6 @@ public class CommentConverter implements Converter<Comment, CommentDTO> {
         comment.setUser(userService.getUserById(entity.getUser_id()));
         comment.setMeeting(meetingService.getMeetingById(entity.getMeeting_id()));
         comment.setDate(new Date());
-//        entity.getDate()==null?df.parse(entity.getDate()):new Date()
         comment.setContent(entity.getContent());
         return comment;
     }

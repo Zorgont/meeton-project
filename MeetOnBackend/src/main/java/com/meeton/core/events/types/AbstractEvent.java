@@ -16,5 +16,5 @@ public interface AbstractEvent<T> {
         System.out.println(getClass().getSimpleName());
         return new EventEntity(date, getClass().getSimpleName(), new ObjectMapper().writer().withDefaultPrettyPrinter().
                 writeValueAsString(map));
-    };
+    }
 }

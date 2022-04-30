@@ -12,7 +12,6 @@ spring:
 
 app:
   jwtSecret: 926D96C90030DD58429D2751AC1BDBBC
-  jwtExpirationMs: 864000000
   api-gateway-url: http://API-GATEWAY
 
 eureka:

@@ -24,7 +24,7 @@ public class MeetingPlatformsConverter implements Converter<MeetingPlatform, Mee
     public MeetingPlatform convert(MeetingPlatformsDTO entity) throws ParseException, ValidatorException {
         Meeting meeting = (entity.getMeetingId() != null && meetingService.existsById(entity.getMeetingId())) ? meetingService.getMeetingById(entity.getMeetingId()) : null;
         Optional<Platform> tryPlatform = platformService.getById(entity.getPlatformId());
-        Platform platform = tryPlatform.isPresent() ? tryPlatform.get() : null;
+        Platform platform = tryPlatform.orElse(null);
 
         if (entity.getAddress() == null || entity.getAddress().isEmpty())
             throw new ValidatorException("Address cannot be empty!");

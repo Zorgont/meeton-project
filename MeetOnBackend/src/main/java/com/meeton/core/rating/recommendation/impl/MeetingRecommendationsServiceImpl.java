@@ -35,10 +35,9 @@ public class MeetingRecommendationsServiceImpl implements MeetingRecommendations
     public List<List<Meeting>> getRecommendations(List<Meeting> meetings, User target, int page) {
         List<List<Meeting>> list = new ArrayList<>();
         List<TagGroup> tagGroups = target != null ? tagGroupService.getByUser(target) : null;
-        if(tagGroups == null || tagGroups.isEmpty()) {
-             list.add(getRecommendationsByRating(meetings).stream().filter(meeting -> target == null || !meetingService.getManager(meeting).getId().equals(target.getId())).limit(10L * (page)).skip(10L * (page - 1)).collect(Collectors.toList()));
-        }
-        else {
+        if (tagGroups == null || tagGroups.isEmpty()) {
+            list.add(getRecommendationsByRating(meetings).stream().filter(meeting -> target == null || !meetingService.getManager(meeting).getId().equals(target.getId())).limit(10L * (page)).skip(10L * (page - 1)).collect(Collectors.toList()));
+        } else {
             tagGroups.forEach((tagGroup -> {
                 list.add(getRecommendationsByTags(new ArrayList<>(meetings), new ArrayList<>(tagGroup.getTags()), 10 * page)
                         .stream().map(this::getRecommendationsByRating).flatMap(Collection::stream).filter(meeting -> !meetingService.getManager(meeting).getId().equals(target.getId())).limit(10L * (page)).skip(10L * (page - 1)).collect(Collectors.toList()));
@@ -55,33 +54,32 @@ public class MeetingRecommendationsServiceImpl implements MeetingRecommendations
 
     private List<List<Meeting>> getRecommendationsByTags(List<Meeting> meetings, List<Tag> tags, int endIndex) {
         List<List<Meeting>> recommendedMeetings = new ArrayList<>();
-        for(int i = tags.size(); i > 0; i--){
+        for (int i = tags.size(); i > 0; i--) {
             recommendedMeetings.add(getRecommendationsSubGroup(meetings, tags, i));
-            if(meetings.isEmpty()) break;
-            if(endIndex <= recommendedMeetings.stream().mapToInt(List::size).sum())
+            if (meetings.isEmpty()) break;
+            if (endIndex <= recommendedMeetings.stream().mapToInt(List::size).sum())
                 return recommendedMeetings;
         }
-        if(!meetings.isEmpty())
+        if (!meetings.isEmpty())
             recommendedMeetings.add(meetings);
         return recommendedMeetings;
     }
 
-    private List<Meeting> getRecommendationsSubGroup(List<Meeting> meetings, List<Tag> tags, int size){
+    private List<Meeting> getRecommendationsSubGroup(List<Meeting> meetings, List<Tag> tags, int size) {
         List<Meeting> sortedMeetings = new ArrayList<>();
         recursiveMethod(meetings, sortedMeetings, tags, new ArrayList<Tag>(), 0, size);
         return sortedMeetings;
     }
 
-    private void recursiveMethod(List<Meeting> meetings, List<Meeting> sortedMeetings, List<Tag> tags, List<Tag> changingTags, int index, int fullSize){
-        if(index == fullSize)
-        {   if(changingTags.stream().distinct().count() < changingTags.size()) return;
+    private void recursiveMethod(List<Meeting> meetings, List<Meeting> sortedMeetings, List<Tag> tags, List<Tag> changingTags, int index, int fullSize) {
+        if (index == fullSize) {
+            if (changingTags.stream().distinct().count() < changingTags.size()) return;
             List<Meeting> temporalList = meetings.stream().filter(meeting -> meeting.getTags().stream().map(Tag::getName).collect(Collectors.toList()).containsAll(changingTags.stream().map(Tag::getName).collect(Collectors.toList()))).collect(Collectors.toList());
             sortedMeetings.addAll(temporalList);
             meetings.removeAll(temporalList);
-        }
-        else{
-            for(int i = 0; i < tags.size(); i++){
-                if(changingTags.size() > index)
+        } else {
+            for (int i = 0; i < tags.size(); i++) {
+                if (changingTags.size() > index)
                     changingTags.set(index, tags.get(i));
                 else
                     changingTags.add(index, tags.get(i));

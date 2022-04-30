@@ -5,11 +5,9 @@ import TextField from '@material-ui/core/TextField';
 
 import { Link } from 'react-router-dom';
 import CheckButton from "react-validation/build/button";
-import GoogleLogin from "react-google-login";
 
 import AuthService from "../services/AuthService";
-import UserService from "../services/UserService";
-import { GITHUB_AUTH_URL, GOOGLE, GOOGLE_AUTH_URL } from "../constants/constant";
+import { GITHUB_AUTH_URL, GOOGLE_AUTH_URL } from "../constants/constant";
 
 const required = value => {
     if (!value) {
@@ -90,52 +88,6 @@ export default class NewLoginComponent extends Component {
         }
     }
 
-    onSuccessfulGoogleAuthorization = (response) => {
-        console.log(response);
-        console.log("hell yeah");
-        let user = {
-            email: response.profileObj.email,
-            firstName: response.profileObj.givenName,
-            secondName: response.profileObj.familyName,
-            accessToken: response.accessToken
-        }
-        console.log(`/usernameInput?email=${user.email}&firstName=${user.firstName}&secondName=${user.secondName}&accessToken=${user.accessToken}`)
-
-        AuthService.existsUserByEmail(user.email).then(res => {
-            console.log(res.data);
-            if (res.data) {
-                AuthService.loginViaGoogle(user).then(res => {
-                    this.props.history.push("/profile")
-                    window.location.reload();
-                }, error => {
-                    const resMessage =
-                        (error.response &&
-                            error.response.data &&
-                            error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-
-                    this.setState({
-                        loading: false,
-                        message: resMessage
-                    })
-                });
-            }
-            else {
-                this.props.history.push(`/usernameInput?email=${user.email}&firstName=${user.firstName}&secondName=${user.secondName}&accessToken=${user.accessToken}`);
-                window.location.reload();
-            }
-        })
-    }
-
-    onFailureGoogleAuthorization = (response) => {
-        console.log(response)
-        console.log("damn it")
-        this.setState({
-            message: response.error
-        })
-    }
-
     render() {
         return (
             <div className="container">
@@ -153,14 +105,6 @@ export default class NewLoginComponent extends Component {
                         </div>
                         <div className="row mb-4">
                             <div className="col">
-                                {/* <GoogleLogin
-                                    clientId="9387373968-sqc6916e9o8h2usu5p981bdaj4sr4lu9.apps.googleusercontent.com"
-                                    onSuccess={this.onSuccessfulGoogleAuthorization}
-                                    onFailure={this.onFailureGoogleAuthorization}
-                                    cookiePolicy={'single_host_origin'}
-                                    render = {renderProps => {
-                                        return <button className="btn btn-danger raleway custom-paragraph" onClick={renderProps.onClick} style={{width: "100%", backgroundColor: "#CD5642", marginLeft: "8px", marginRight: "-8px"}}><i class="fa fa-google" style={{color: "white", marginRight: "10px"}}/>Join using Google</button>
-                                    }}/> */}
                                     <div>
                                         <a className="btn btn-danger raleway custom-paragraph" href={GOOGLE_AUTH_URL} style={{width: "100%", backgroundColor: "#CD5642", marginLeft: "8px", marginRight: "-8px"}}><i class="fa fa-google" style={{color: "white", marginRight: "10px"}}/>Join using Google</a>
                                     </div>
@@ -168,14 +112,6 @@ export default class NewLoginComponent extends Component {
                         </div>
                         <div className="row mb-4">
                             <div className="col">
-                                {/* <GoogleLogin
-                                    clientId="9387373968-sqc6916e9o8h2usu5p981bdaj4sr4lu9.apps.googleusercontent.com"
-                                    onSuccess={this.onSuccessfulGoogleAuthorization}
-                                    onFailure={this.onFailureGoogleAuthorization}
-                                    cookiePolicy={'single_host_origin'}
-                                    render = {renderProps => {
-                                        return <button className="btn btn-danger raleway custom-paragraph" onClick={renderProps.onClick} style={{width: "100%", backgroundColor: "#CD5642", marginLeft: "8px", marginRight: "-8px"}}><i class="fa fa-google" style={{color: "white", marginRight: "10px"}}/>Join using Google</button>
-                                    }}/> */}
                                     <div>
                                         <a className="btn raleway custom-paragraph" href={GITHUB_AUTH_URL} style={{width: "100%", backgroundColor: "#666", marginLeft: "8px", marginRight: "-8px", color: "white"}}><i class="fa fa-github" style={{color: "white", marginRight: "10px"}}/>Join using GitHub</a>
                                     </div>

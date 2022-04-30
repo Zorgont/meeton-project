@@ -24,6 +24,7 @@ public class MeetingScoresUserRatingComponent implements UserRatingComponent {
     private final MeetingService meetingService;
     private final MeetingScoresCalculator meetingScoresCalculator;
     private final RatingWeightService weightService;
+
     @Override
     public double getUserRating(User user) {
         final double minScoreValue = 0;

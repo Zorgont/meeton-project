@@ -1,10 +1,12 @@
-package com.meeton.core.security;
+package com.meeton.core.config;
 
 import com.meeton.core.entities.*;
 import com.meeton.core.repositories.RatingWeightRepository;
 import com.meeton.core.repositories.RoleRepository;
 import com.meeton.core.repositories.TagRepository;
 import com.meeton.core.repositories.UserRepository;
+import com.meeton.core.security.AuthEntryPointJwt;
+import com.meeton.core.security.AuthTokenFilter;
 import com.meeton.core.services.PlatformService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -123,7 +125,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/meeton-core/v1/requests/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/meeton-core/v1/comments/**").permitAll()
                 .antMatchers("/meeton-core/v1/comments/**").authenticated()
-                .antMatchers("/meeton-core/v1/notifications/**").authenticated()
                 .antMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated();
 

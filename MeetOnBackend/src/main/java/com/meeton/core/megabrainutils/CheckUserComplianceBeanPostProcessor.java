@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Component
 public class CheckUserComplianceBeanPostProcessor implements BeanPostProcessor {
-    private Map<String, Class> controllers = new HashMap<>();
+    private final Map<String, Class> controllers = new HashMap<>();
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -48,7 +48,7 @@ public class CheckUserComplianceBeanPostProcessor implements BeanPostProcessor {
                         if (param.isAnnotationPresent(DTO.class)) {
                             Field userIdField = args[i].getClass().getDeclaredField(param.getAnnotation(DTO.class).name());
                             userIdField.setAccessible(true);
-                            if (!((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId().equals((Long) userIdField.get(args[i]))) {
+                            if (!((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId().equals(userIdField.get(args[i]))) {
                                 if(method.getReturnType().equals(Boolean.class))
                                     return false;
                                 if(method.getReturnType().equals(ResponseEntity.class))
