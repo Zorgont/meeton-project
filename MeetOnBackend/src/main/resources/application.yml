@@ -9,6 +9,14 @@ spring:
     password: root
   jpa:
     generate-ddl: true
+  kafka:
+    consumer:
+      # todo: consider changing localhost to address of kafka server
+      bootstrap-servers: localhost:9092
+      group-id: new_user_group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 app:
   jwtSecret: 926D96C90030DD58429D2751AC1BDBBC

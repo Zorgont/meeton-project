@@ -33,6 +33,7 @@ services:
       - db
       - meeton-eureka
     environment:
+      spring.kafka.consumer.bootstrap-servers: kafka:9092
       eureka.client.serviceUrl.defaultZone: http://meeton-eureka:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: meeton-core
       spring.datasource.url: jdbc:postgresql://db:5432/meeton
@@ -49,6 +50,7 @@ services:
       - mongo
       - meeton-eureka
     environment:
+      spring.kafka.producer.bootstrap-servers: kafka:9092
       eureka.client.serviceUrl.defaultZone: http://meeton-eureka:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: meeton-am
       SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
@@ -124,6 +126,22 @@ services:
       - 27018:27017
     volumes:
       - mongodb_data_container:/data/db
+  
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+    - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+    - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
 
 volumes:
   mongodb_data_container:

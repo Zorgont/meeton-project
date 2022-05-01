@@ -1,7 +1,9 @@
 package com.meeton.authentication.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.meeton.authentication.config.AppConfig;
 import com.meeton.authentication.exception.ResourceNotFoundException;
 import com.meeton.authentication.model.AuthProvider;
@@ -25,8 +27,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
@@ -36,12 +36,12 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final AppConfig appConfig;
     private final RestTemplate restTemplate;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final KafkaMessageProducer kafkaMessageProducer;
 
     public UserDetails loadUserByEmail(String email) {
         User user = getUserByEmail(email)
@@ -139,19 +139,13 @@ public class UserServiceImpl implements UserService {
 
     @SneakyThrows
     private void sendNewUserNotification(User user) {
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            String json = ow.writeValueAsString(user);
+        JsonNode node = objectMapper.valueToTree(user);
+        ((ObjectNode)node).remove("id");
 
-            HttpEntity<String> entity = new HttpEntity<>(json, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(URI.create(appConfig.getMeetonCoreUrl() + "/meeton-core/v1/auth/signup"), entity, String.class);
-            log.info("Notification successfully transmitted!");
-        } catch (Exception e) {
-            log.info("Notification processing failed! Details: {}", e.getMessage());
-        }
+        kafkaMessageProducer.sendMessage(objectMapper.writer().writeValueAsString(node));
+        log.info("Notification successfully transmitted!");
     }
 
     @SneakyThrows

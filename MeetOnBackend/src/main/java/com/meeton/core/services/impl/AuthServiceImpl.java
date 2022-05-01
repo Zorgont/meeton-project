@@ -32,10 +32,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ValidatorException("Error: Email is already in use!");
         }
 
-        User user = createUser(signUpRequest);
-        user.setIsEnabled(true);
-        user.setStatus("Confirmed");
-        userRepository.save(user);
+        createUser(signUpRequest);
     }
 
     private User createUser(SignupRequest request) {
@@ -46,7 +43,8 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .secondName(request.getSecondName())
-                .isEnabled(false)
+                .isEnabled(true)
+                .status("Confirmed")
                 .build();
         if (!StringUtils.isEmpty(request.getPassword())) {
             user.setPassword(encoder.encode(request.getPassword()));
