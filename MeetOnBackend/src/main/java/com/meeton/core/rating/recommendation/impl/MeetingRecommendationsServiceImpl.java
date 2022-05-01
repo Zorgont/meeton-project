@@ -1,5 +1,8 @@
 package com.meeton.core.rating.recommendation.impl;
 
+import com.meeton.core.converters.MeetingConverter;
+import com.meeton.core.dto.MeetingDTO;
+import com.meeton.core.dto.RecommendationRequestDTO;
 import com.meeton.core.entities.Meeting;
 import com.meeton.core.entities.Tag;
 import com.meeton.core.entities.TagGroup;
@@ -8,20 +11,12 @@ import com.meeton.core.rating.recommendation.MeetingRecommendationsService;
 import com.meeton.core.rating.service.UserRatingProvider;
 import com.meeton.core.services.MeetingService;
 import com.meeton.core.services.TagGroupService;
-import com.meeton.core.entities.Meeting;
-import com.meeton.core.entities.Tag;
-import com.meeton.core.entities.TagGroup;
-import com.meeton.core.rating.service.UserRatingProvider;
-import com.meeton.core.services.MeetingService;
-import com.meeton.core.services.TagGroupService;
+import com.meeton.core.services.client.RecommendationManagerClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,21 +25,33 @@ public class MeetingRecommendationsServiceImpl implements MeetingRecommendations
     private final UserRatingProvider userRatingProvider;
     private final TagGroupService tagGroupService;
     private final MeetingService meetingService;
+    private final MeetingConverter meetingConverter;
+    private final RecommendationManagerClient recommendationManagerClient;
 
     @Override
     public List<List<Meeting>> getRecommendations(List<Meeting> meetings, User target, int page) {
         List<List<Meeting>> list = new ArrayList<>();
-        List<TagGroup> tagGroups = target != null ? tagGroupService.getByUser(target) : null;
-        if (tagGroups == null || tagGroups.isEmpty()) {
-            list.add(getRecommendationsByRating(meetings).stream().filter(meeting -> target == null || !meetingService.getManager(meeting).getId().equals(target.getId())).limit(10L * (page)).skip(10L * (page - 1)).collect(Collectors.toList()));
-        } else {
-            tagGroups.forEach((tagGroup -> {
-                list.add(getRecommendationsByTags(new ArrayList<>(meetings), new ArrayList<>(tagGroup.getTags()), 10 * page)
-                        .stream().map(this::getRecommendationsByRating).flatMap(Collection::stream).filter(meeting -> !meetingService.getManager(meeting).getId().equals(target.getId())).limit(10L * (page)).skip(10L * (page - 1)).collect(Collectors.toList()));
-            }));
+        if (target != null) {
+            meetings.removeAll(meetingService.getMeetingsByManager(target));
+            for (TagGroup tagGroup : tagGroupService.getByUser(target)) {
+                list.add(
+                        getRecommendationsByTags(meetings, new ArrayList<>(tagGroup.getTags()), 10 * page)
+                                .stream()
+                                .flatMap(Collection::stream)
+                                .collect(Collectors.toList())
+                );
+            }
         }
-        return list;
 
+        if (CollectionUtils.isEmpty(list)) {
+            list.add(meetings);
+        }
+
+        return list.stream()
+                .map(this::getRecommendationsByRating)
+                .limit(10L * (page))
+                .skip(10L * (page - 1))
+                .collect(Collectors.toList());
     }
 
     private List<Meeting> getRecommendationsByRating(List<Meeting> meetings) {
@@ -53,16 +60,17 @@ public class MeetingRecommendationsServiceImpl implements MeetingRecommendations
     }
 
     private List<List<Meeting>> getRecommendationsByTags(List<Meeting> meetings, List<Tag> tags, int endIndex) {
-        List<List<Meeting>> recommendedMeetings = new ArrayList<>();
-        for (int i = tags.size(); i > 0; i--) {
-            recommendedMeetings.add(getRecommendationsSubGroup(meetings, tags, i));
-            if (meetings.isEmpty()) break;
-            if (endIndex <= recommendedMeetings.stream().mapToInt(List::size).sum())
-                return recommendedMeetings;
-        }
-        if (!meetings.isEmpty())
-            recommendedMeetings.add(meetings);
-        return recommendedMeetings;
+        RecommendationRequestDTO dto = new RecommendationRequestDTO(
+                meetings.stream().map(meetingConverter::convertBack).collect(Collectors.toList()),
+                tags.stream().map(Tag::getName).collect(Collectors.toList()), endIndex);
+
+        List<List<MeetingDTO>> recommendedMeetingsDTO = recommendationManagerClient.calculateRecommendations(dto);
+        return recommendedMeetingsDTO.stream()
+                .filter(list -> !CollectionUtils.isEmpty(list))
+                .map(list -> list.stream()
+                        .map(meeting -> meetingService.getMeetingById(meeting.getMeetingId()))
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
     }
 
     private List<Meeting> getRecommendationsSubGroup(List<Meeting> meetings, List<Tag> tags, int size) {
@@ -84,7 +92,6 @@ public class MeetingRecommendationsServiceImpl implements MeetingRecommendations
                 else
                     changingTags.add(index, tags.get(i));
                 recursiveMethod(meetings, sortedMeetings, tags, changingTags, index + 1, fullSize);
-
             }
         }
     }

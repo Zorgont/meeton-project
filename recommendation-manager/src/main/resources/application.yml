@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: recommendation-manager
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    instance:
+      hostname: localhost
+
+app:
+  api-gateway-url: http://API-GATEWAY
+
+server:
+  port: 8084

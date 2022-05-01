@@ -10,6 +10,8 @@ cd ../notification-manager
 source build.sh
 cd ../rating-manager
 source build.sh
+cd ../recommendation-manager
+source build.sh
 cd ../MeetOnFrontend
 source build.sh
 

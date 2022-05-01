@@ -20,6 +20,10 @@ spring:
           uri: lb://rating-manager
           predicates:
             - Path=/rating-manager/**
+        - id: recommendation-manager
+          uri: lb://recommendation-manager
+          predicates:
+            - Path=/recommendation-manager/**
       globalcors:
         cors-configurations:
           '[/**]':

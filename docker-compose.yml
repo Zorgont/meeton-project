@@ -1,13 +1,13 @@
 version: '2'
 
 services:
-  meeton-ui:
-    image: 'meeton-ui:latest'
-    volumes:
-      - '.:/MeetOnFrontend/app'
-      - '/MeetOnFrontend/app/node_modules'
-    ports:
-      - 3000:3000
+  # meeton-ui:
+  #   image: 'meeton-ui:latest'
+  #   volumes:
+  #     - '.:/MeetOnFrontend/app'
+  #     - '/MeetOnFrontend/app/node_modules'
+  #   ports:
+  #     - 3000:3000
 
   meeton-eureka:
     image: 'meeton-eureka:latest'
@@ -28,6 +28,7 @@ services:
     image: 'meeton-core:latest'
     ports:
       - "8080:8080"
+      - "5000:5005"
     depends_on:
       - db
       - meeton-eureka
@@ -94,6 +95,17 @@ services:
       SPRING_DATA_MONGODB_PORT: 27017
       SPRING_DATA_MONGODB_USERNAME: root
       SPRING_DATA_MONGODB_PASSWORD: rootpassword
+
+  meeton-rec-manager:
+    image: 'meeton-rec-manager:latest'
+    ports:
+      - "8084:8084"
+      - "5004:5005"
+    depends_on:
+      - meeton-eureka
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://meeton-eureka:8761/eureka/
+      EUREKA_INSTANCE_HOSTNAME: meeton-rec-manager
 
   db:
     image: 'postgres:13.1-alpine'
