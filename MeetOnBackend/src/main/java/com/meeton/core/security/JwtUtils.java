@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class JwtUtils {
     private final AppConfig appConfig;
 
-    public String getUserNameFromJwtToken(String token) {
+    public String getEmailFromToken(String token) {
         return Jwts.parser().setSigningKey(appConfig.getJwtSecret()).parseClaimsJws(token).getBody().getSubject();
     }
 

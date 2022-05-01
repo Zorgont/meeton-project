@@ -8,7 +8,7 @@ import com.meeton.core.entities.MeetingScore;
 import com.meeton.core.entities.User;
 import com.meeton.core.rating.service.UserRatingProvider;
 import com.meeton.core.services.MeetingService;
-import com.meeton.core.services.RatingManagerClient;
+import com.meeton.core.services.client.RatingManagerClient;
 import com.meeton.core.services.RequestService;
 import com.meeton.core.services.ScoreService;
 import lombok.RequiredArgsConstructor;

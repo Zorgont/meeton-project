@@ -10,7 +10,7 @@ import com.meeton.core.entities.User;
 import com.meeton.core.events.EventStoringService;
 import com.meeton.core.events.types.single.AbstractSingleEvent;
 import com.meeton.core.services.MeetingService;
-import com.meeton.core.services.NotificationManagerClient;
+import com.meeton.core.services.client.NotificationManagerClient;
 import com.meeton.core.services.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

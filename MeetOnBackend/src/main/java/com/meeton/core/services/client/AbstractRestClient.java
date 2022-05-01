@@ -1,28 +1,19 @@
-package com.meeton.core.services;
+package com.meeton.core.services.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.meeton.core.config.AppConfig;
-import com.meeton.core.dto.NotificationDTO;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
 @Slf4j
-@Service
-@RequiredArgsConstructor
-public class NotificationManagerClient {
-    private final RestTemplate restTemplate;
-    private final AppConfig appConfig;
-
-    public void sendNotification(NotificationDTO dto) {
+public abstract class AbstractRestClient<DTO> {
+    protected ResponseEntity<String> execute(RestTemplate restTemplate, DTO dto, String url) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -31,11 +22,13 @@ public class NotificationManagerClient {
             String json = ow.writeValueAsString(dto);
 
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(URI.create(appConfig.getApiGatewayUrl() + "/notification-manager/v1/notification"), entity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(URI.create(url), entity, String.class);
+            log.info("Rest request to {} is processed successfully", url);
             log.debug(response.toString());
-            log.info("Notification successfully transmitted!");
+            return response;
         } catch (Exception e) {
-            log.info("Notification processing failed! Details: {}", e.getMessage());
+            log.info("Rest request to {} processing failed! Details: {}", url, e.getMessage());
+            return null;
         }
     }
 }
