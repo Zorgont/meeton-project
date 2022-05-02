@@ -13,7 +13,7 @@ import com.meeton.core.services.MeetingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meeton.core.services.client.NotificationManagerClient;
+import com.meeton.core.services.client.ServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class RequestCreatedEvent implements AbstractMultipleEvent<Long, RequestDTO> {
     private final MeetingService meetingService;
     private final EventStoringService eventStoringService;
-    private final NotificationManagerClient notificationManagerClient;
+    private final ServiceClient<Void, NotificationDTO> notificationManagerKafkaClient;
 
     @Override
     public Map<Long, List<EventEntity>> preprocess(List<EventEntity> events) {
@@ -66,6 +66,6 @@ public class RequestCreatedEvent implements AbstractMultipleEvent<Long, RequestD
                         .build())
                 .build();
 
-        notificationManagerClient.sendNotification(dto);
+        notificationManagerKafkaClient.execute(dto);
     }
 }

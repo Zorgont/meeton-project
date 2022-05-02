@@ -1,27 +1,23 @@
 package com.meeton.authentication.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.meeton.authentication.config.AppConfig;
 import com.meeton.authentication.exception.ResourceNotFoundException;
-import com.meeton.authentication.model.AuthProvider;
-import com.meeton.authentication.model.LoginRequest;
-import com.meeton.authentication.model.UserToken;
+import com.meeton.authentication.model.dto.EmailConfirmationRequest;
+import com.meeton.authentication.model.dto.SignUpRequest;
+import com.meeton.authentication.model.entity.AuthProvider;
+import com.meeton.authentication.model.dto.LoginRequest;
+import com.meeton.authentication.model.dto.UserToken;
+import com.meeton.authentication.model.entity.User;
 import com.meeton.authentication.repository.UserRepository;
 import com.meeton.authentication.security.TokenProvider;
 import com.meeton.authentication.security.UserPrincipal;
 import com.meeton.authentication.security.oauth2.CustomOAuth2UserService;
-import com.meeton.authentication.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.utils.URIBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final RestTemplate restTemplate;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private final KafkaMessageProducer kafkaMessageProducer;
+    private final ObjectMapper mapper;
 
     public UserDetails loadUserByEmail(String email) {
         User user = getUserByEmail(email)
@@ -121,10 +118,10 @@ public class UserServiceImpl implements UserService {
             user = existingUser;
         }
 
-        user = userRepository.save(user);
         if (user.isValid()) {
             sendNewUserNotification(user);
         }
+        user = userRepository.save(user);
 
         return user;
     }
@@ -139,34 +136,29 @@ public class UserServiceImpl implements UserService {
 
     @SneakyThrows
     private void sendNewUserNotification(User user) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        JsonNode node = objectMapper.valueToTree(user);
-        ((ObjectNode)node).remove("id");
-
-        kafkaMessageProducer.sendMessage(objectMapper.writer().writeValueAsString(node));
-        log.info("Notification successfully transmitted!");
-    }
-
-    @SneakyThrows
-    private void sendConfirmationUserNotification(User user) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            String body = "<p>To confirm your account, please click here</p><br><a href='https://localhost:3000/confirm?token=" + user.getConfirmationToken().toString() + "'>Click here!</a>";
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String json = ow.writeValueAsString(user);
 
-            URI uri = new URIBuilder(appConfig.getMeetonCoreUrl() + "/notification-manager/v1/notification/email")
-                    .addParameter("email", user.getEmail())
-                    .addParameter("subject", "Confirm your account")
-                    .build();
-
-            HttpEntity<String> entity = new HttpEntity<>(body, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(uri, entity, String.class);
+            HttpEntity<String> entity = new HttpEntity<>(json, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity(URI.create(appConfig.getMeetonCoreUrl() + "/meeton-core/v1/auth/signup"), entity, String.class);
+            if (!response.getStatusCode().equals(HttpStatus.OK)) {
+                throw new RuntimeException("Failed to save user in meeton: " + response.getBody());
+            }
             log.info("Notification successfully transmitted!");
-            log.debug(response.toString());
         } catch (Exception e) {
             log.info("Notification processing failed! Details: {}", e.getMessage());
+            throw e;
         }
+    }
+
+    @SneakyThrows
+    private void sendConfirmationUserNotification(User user) {
+        String body = "<p>To confirm your account, please click here</p><br><a href='https://localhost:3000/confirm?token=" + user.getConfirmationToken() + "'>Click here!</a>";
+        EmailConfirmationRequest dto = new EmailConfirmationRequest(user.getEmail(), "Confirm your account", body);
+        kafkaMessageProducer.sendMessage(KafkaMessageProducer.TOPIC_CONFIRMATION_TOKEN, mapper.writer().writeValueAsString(dto));
     }
 }

@@ -11,7 +11,7 @@ import com.meeton.core.rating.recommendation.MeetingRecommendationsService;
 import com.meeton.core.rating.service.UserRatingProvider;
 import com.meeton.core.services.MeetingService;
 import com.meeton.core.services.TagGroupService;
-import com.meeton.core.services.client.RecommendationManagerClient;
+import com.meeton.core.services.client.ServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -26,7 +26,7 @@ public class MeetingRecommendationsServiceImpl implements MeetingRecommendations
     private final TagGroupService tagGroupService;
     private final MeetingService meetingService;
     private final MeetingConverter meetingConverter;
-    private final RecommendationManagerClient recommendationManagerClient;
+    private final ServiceClient<List<List<MeetingDTO>>, RecommendationRequestDTO> recommendationManagerClient;
 
     @Override
     public List<List<Meeting>> getRecommendations(List<Meeting> meetings, User target, int page) {
@@ -64,7 +64,7 @@ public class MeetingRecommendationsServiceImpl implements MeetingRecommendations
                 meetings.stream().map(meetingConverter::convertBack).collect(Collectors.toList()),
                 tags.stream().map(Tag::getName).collect(Collectors.toList()), endIndex);
 
-        List<List<MeetingDTO>> recommendedMeetingsDTO = recommendationManagerClient.calculateRecommendations(dto);
+        List<List<MeetingDTO>> recommendedMeetingsDTO = recommendationManagerClient.execute(dto);
         return recommendedMeetingsDTO.stream()
                 .filter(list -> !CollectionUtils.isEmpty(list))
                 .map(list -> list.stream()

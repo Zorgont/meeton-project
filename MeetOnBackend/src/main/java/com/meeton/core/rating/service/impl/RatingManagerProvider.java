@@ -8,9 +8,9 @@ import com.meeton.core.entities.MeetingScore;
 import com.meeton.core.entities.User;
 import com.meeton.core.rating.service.UserRatingProvider;
 import com.meeton.core.services.MeetingService;
-import com.meeton.core.services.client.RatingManagerClient;
 import com.meeton.core.services.RequestService;
 import com.meeton.core.services.ScoreService;
+import com.meeton.core.services.client.ServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class RatingManagerProvider implements UserRatingProvider {
     private final MeetingService meetingService;
     private final RequestService requestService;
     private final ScoreService scoreService;
-    private final RatingManagerClient ratingManagerClient;
+    private final ServiceClient<Double, UserComponents> ratingManagerClient;
 
     @Override
     public double getUserRating(User user) {
@@ -47,6 +47,6 @@ public class RatingManagerProvider implements UserRatingProvider {
                 .meetingComponents(meetingComponents)
                 .build();
 
-        return ratingManagerClient.calculateRating(userComponents);
+        return ratingManagerClient.execute(userComponents);
     }
 }

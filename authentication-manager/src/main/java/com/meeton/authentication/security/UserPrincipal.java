@@ -1,6 +1,6 @@
 package com.meeton.authentication.security;
 
-import com.meeton.authentication.model.User;
+import com.meeton.authentication.model.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

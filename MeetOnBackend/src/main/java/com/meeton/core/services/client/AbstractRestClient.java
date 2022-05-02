@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 
 @Slf4j
-public abstract class AbstractRestClient<DTO> {
+public abstract class AbstractRestClient<R, DTO> implements ServiceClient<R, DTO> {
     protected ResponseEntity<String> execute(RestTemplate restTemplate, DTO dto, String url) {
         try {
             HttpHeaders headers = new HttpHeaders();

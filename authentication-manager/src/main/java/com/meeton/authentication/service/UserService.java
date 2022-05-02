@@ -1,13 +1,10 @@
 package com.meeton.authentication.service;
 
-import com.meeton.authentication.model.LoginRequest;
-import com.meeton.authentication.model.UserToken;
-import com.meeton.authentication.model.LoginRequest;
-import com.meeton.authentication.model.SignUpRequest;
-import com.meeton.authentication.model.User;
-import com.meeton.authentication.model.UserToken;
+import com.meeton.authentication.model.dto.LoginRequest;
+import com.meeton.authentication.model.dto.UserToken;
+import com.meeton.authentication.model.dto.SignUpRequest;
+import com.meeton.authentication.model.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 

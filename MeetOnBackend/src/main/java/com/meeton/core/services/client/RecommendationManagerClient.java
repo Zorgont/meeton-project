@@ -16,11 +16,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RecommendationManagerClient extends AbstractRestClient<RecommendationRequestDTO> {
+public class RecommendationManagerClient extends AbstractRestClient<List<List<MeetingDTO>>, RecommendationRequestDTO> {
     private final RestTemplate restTemplate;
     private final AppConfig appConfig;
 
-    public List<List<MeetingDTO>> calculateRecommendations(RecommendationRequestDTO dto) {
+    public List<List<MeetingDTO>> execute(RecommendationRequestDTO dto) {
         ResponseEntity<String> response =
                 super.execute(restTemplate, dto, appConfig.getApiGatewayUrl() + "/recommendation-manager/v1/recommendation");
 

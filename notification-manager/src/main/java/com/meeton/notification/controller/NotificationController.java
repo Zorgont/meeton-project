@@ -24,7 +24,7 @@ public class NotificationController {
     private final EmailService emailService;
 
     @PostMapping
-    public void createNotification(@RequestBody NotificationDTO notification) throws ParseException {
+    public void createNotification(@RequestBody NotificationDTO notification) {
         notificationService.createNotification(notificationConverter.convert(notification));
     }
 

@@ -19,6 +19,14 @@ spring:
           auth: true
           starttls:
             enable: true
+  kafka:
+    consumer:
+      # todo: consider changing localhost to address of kafka server
+      bootstrap-servers: localhost:9092
+      group-id: notifications
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 eureka:
   client:

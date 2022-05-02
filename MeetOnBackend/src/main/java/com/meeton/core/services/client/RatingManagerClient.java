@@ -9,18 +9,18 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
-public class RatingManagerClient extends AbstractRestClient<UserComponents> {
+public class RatingManagerClient extends AbstractRestClient<Double, UserComponents> {
     private final RestTemplate restTemplate;
     private final AppConfig appConfig;
 
-    public double calculateRating(UserComponents dto) {
+    public Double execute(UserComponents dto) {
         ResponseEntity<String> response =
                 super.execute(restTemplate, dto, appConfig.getApiGatewayUrl() + "/rating-manager/v1/rating");
 
         if (response != null && response.hasBody()) {
             return Double.parseDouble(response.getBody());
         } else {
-            return 0;
+            return (double) 0;
         }
     }
 }

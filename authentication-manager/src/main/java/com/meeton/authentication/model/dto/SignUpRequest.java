@@ -1,6 +1,8 @@
-package com.meeton.authentication.model;
+package com.meeton.authentication.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data

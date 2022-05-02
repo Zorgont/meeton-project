@@ -1,5 +1,6 @@
 package com.meeton.core.controllers;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meeton.core.dto.SignupRequest;
 import com.meeton.core.services.AuthService;
@@ -15,7 +16,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class KafkaConsumer {
     private final AuthService authService;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     @KafkaListener(topics = "users", groupId = "new_user_group")
     public void consume(String message) throws IOException {

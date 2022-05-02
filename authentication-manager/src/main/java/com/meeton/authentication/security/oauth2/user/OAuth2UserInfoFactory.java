@@ -1,12 +1,11 @@
 package com.meeton.authentication.security.oauth2.user;
 
 import com.meeton.authentication.exception.OAuth2AuthenticationProcessingException;
-import com.meeton.authentication.exception.OAuth2AuthenticationProcessingException;
 
 import java.util.Map;
 
-import static com.meeton.authentication.model.AuthProvider.github;
-import static com.meeton.authentication.model.AuthProvider.google;
+import static com.meeton.authentication.model.entity.AuthProvider.github;
+import static com.meeton.authentication.model.entity.AuthProvider.google;
 
 public class OAuth2UserInfoFactory {
 

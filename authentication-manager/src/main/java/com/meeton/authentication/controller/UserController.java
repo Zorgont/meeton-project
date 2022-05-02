@@ -2,9 +2,9 @@ package com.meeton.authentication.controller;
 
 import com.meeton.authentication.exception.BadRequestException;
 import com.meeton.authentication.exception.ResourceNotFoundException;
-import com.meeton.authentication.model.LoginRequest;
-import com.meeton.authentication.model.SignUpRequest;
-import com.meeton.authentication.model.User;
+import com.meeton.authentication.model.dto.LoginRequest;
+import com.meeton.authentication.model.dto.SignUpRequest;
+import com.meeton.authentication.model.entity.User;
 import com.meeton.authentication.security.CurrentUser;
 import com.meeton.authentication.security.UserPrincipal;
 import com.meeton.authentication.service.UserService;

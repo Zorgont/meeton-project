@@ -10,6 +10,11 @@ spring:
   jpa:
     generate-ddl: true
   kafka:
+    producer:
+      # todo: consider changing localhost to address of kafka server
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
     consumer:
       # todo: consider changing localhost to address of kafka server
       bootstrap-servers: localhost:9092

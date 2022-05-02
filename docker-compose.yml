@@ -33,6 +33,7 @@ services:
       - db
       - meeton-eureka
     environment:
+      spring.kafka.producer.bootstrap-servers: kafka:9092
       spring.kafka.consumer.bootstrap-servers: kafka:9092
       eureka.client.serviceUrl.defaultZone: http://meeton-eureka:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: meeton-core
@@ -69,6 +70,7 @@ services:
       - mongo
       - meeton-eureka
     environment:
+      spring.kafka.consumer.bootstrap-servers: kafka:9092
       eureka.client.serviceUrl.defaultZone: http://meeton-eureka:8761/eureka/
       EUREKA_INSTANCE_HOSTNAME: meeton-nm
       SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin

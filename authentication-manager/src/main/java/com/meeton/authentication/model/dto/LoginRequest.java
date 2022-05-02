@@ -1,4 +1,4 @@
-package com.meeton.authentication.model;
+package com.meeton.authentication.model.dto;
 
 import lombok.*;
 

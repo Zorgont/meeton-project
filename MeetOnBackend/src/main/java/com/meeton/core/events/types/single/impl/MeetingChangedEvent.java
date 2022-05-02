@@ -8,11 +8,11 @@ import com.meeton.core.entities.*;
 import com.meeton.core.events.EventStoringService;
 import com.meeton.core.events.types.single.AbstractSingleEvent;
 import com.meeton.core.services.MeetingService;
-import com.meeton.core.services.client.NotificationManagerClient;
 import com.meeton.core.services.RequestService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meeton.core.services.client.ServiceClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ public class MeetingChangedEvent implements AbstractSingleEvent<MeetingDTO> {
     private final MeetingConverter meetingConverter;
     private final RequestService requestService;
     private final EventStoringService eventStoringService;
-    private final NotificationManagerClient notificationManagerClient;
+    private final ServiceClient<Void, NotificationDTO> notificationManagerKafkaClient;
 
     @Override
     public void process(EventEntity event) throws JsonProcessingException, ParseException {
@@ -72,7 +72,7 @@ public class MeetingChangedEvent implements AbstractSingleEvent<MeetingDTO> {
                 .content(content)
                 .user(UserDTO.builder().id(user.getId()).email(user.getEmail()).username(user.getUsername()).build())
                 .build();
-        notificationManagerClient.sendNotification(dto);
+        notificationManagerKafkaClient.execute(dto);
     }
 
     private void infoChanged(Meeting oldMeeting, Meeting newMeeting) {

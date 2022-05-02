@@ -8,11 +8,12 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationManagerClient extends AbstractRestClient<NotificationDTO> {
+public class NotificationManagerClient extends AbstractRestClient<Void, NotificationDTO> {
     private final RestTemplate restTemplate;
     private final AppConfig appConfig;
 
-    public void sendNotification(NotificationDTO dto) {
+    public Void execute(NotificationDTO dto) {
         super.execute(restTemplate, dto, appConfig.getApiGatewayUrl() + "/notification-manager/v1/notification");
+        return null;
     }
 }

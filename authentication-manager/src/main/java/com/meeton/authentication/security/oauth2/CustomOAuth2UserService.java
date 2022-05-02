@@ -1,10 +1,8 @@
 package com.meeton.authentication.security.oauth2;
 
 import com.meeton.authentication.exception.OAuth2AuthenticationProcessingException;
-import com.meeton.authentication.exception.OAuth2AuthenticationProcessingException;
-import com.meeton.authentication.model.AuthProvider;
-import com.meeton.authentication.model.User;
-import com.meeton.authentication.repository.UserRepository;
+import com.meeton.authentication.model.entity.AuthProvider;
+import com.meeton.authentication.model.entity.User;
 import com.meeton.authentication.security.UserPrincipal;
 import com.meeton.authentication.security.oauth2.user.OAuth2UserInfo;
 import com.meeton.authentication.security.oauth2.user.OAuth2UserInfoFactory;

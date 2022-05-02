@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,7 +18,7 @@ import java.util.Date;
 public class NotificationConverter {
     private final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
-    public Notification convert(NotificationDTO dto) throws ParseException {
+    public Notification convert(NotificationDTO dto) {
         String subject = "", content = "", userEmail = "", username = "";
         Long userId = 0L;
         Date date;
