@@ -24,7 +24,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public double calculate(UserComponents userComponents) {
-        if (ratingWeightRepository.count() == 0){
+        if (ratingWeightRepository.findAll().size() == 0){
             ratingWeightRepository.save(RatingWeight.builder().type(RatingWeightType.MEETING_CREATION).value(20.0).build());
             ratingWeightRepository.save(RatingWeight.builder().type(RatingWeightType.MEETING_ATTENDANCE).value(1.0).build());
             ratingWeightRepository.save(RatingWeight.builder().type(RatingWeightType.MEETING_SCORE_COEFFICIENT).value(400.0).build());

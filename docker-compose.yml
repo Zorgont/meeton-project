@@ -10,12 +10,12 @@ services:
   #     - 3000:3000
 
   meeton-eureka:
-    image: 'meeton-eureka:latest'
+    image: 'zorgont35/meeton-eureka:0.3'
     ports:
       - "8761:8761"
 
   meeton-apg:
-    image: 'meeton-apg:latest'
+    image: 'zorgont35/meeton-apg:0.3'
     ports:
       - "8989:8989"
     depends_on:
@@ -25,7 +25,7 @@ services:
       EUREKA_INSTANCE_HOSTNAME: meeton-apg
       
   meeton-core:
-    image: 'meeton-core:latest'
+    image: 'zorgont35/meeton-core:0.3'
     ports:
       - "8080:8080"
       - "5000:5005"
@@ -43,7 +43,7 @@ services:
       spring.jpa.hibernate.ddl-auto: update
 
   meeton-am:
-    image: 'meeton-am:latest'
+    image: 'zorgont35/meeton-am:0.3'
     ports:
       - "8081:8081"
       - "5005:5005"
@@ -63,7 +63,7 @@ services:
       SPRING_DATA_MONGODB_PASSWORD: rootpassword
 
   meeton-nm:
-    image: 'meeton-nm:latest'
+    image: 'zorgont35/meeton-nm:0.3'
     ports:
       - "8082:8082"
     depends_on:
@@ -82,7 +82,7 @@ services:
       SPRING_DATA_MONGODB_PASSWORD: rootpassword
 
   meeton-rm:
-    image: 'meeton-rm:latest'
+    image: 'zorgont35/meeton-rm:0.3'
     ports:
       - "8083:8083"
       - "5003:5005"
@@ -101,7 +101,7 @@ services:
       SPRING_DATA_MONGODB_PASSWORD: rootpassword
 
   meeton-rec-manager:
-    image: 'meeton-rec-manager:latest'
+    image: 'zorgont35/meeton-rec-manager:0.3'
     ports:
       - "8084:8084"
       - "5004:5005"

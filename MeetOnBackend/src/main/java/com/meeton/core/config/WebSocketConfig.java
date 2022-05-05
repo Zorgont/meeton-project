@@ -12,7 +12,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // todo: configure list of allowed origins via application.yml
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws/comment").setAllowedOrigins("https://meeton-web.herokuapp.com", "http://localhost:3000", "http://ui:3000").withSockJS();
+        registry.addEndpoint("/ws/comment").setAllowedOrigins("https://meeton-web.herokuapp.com", "http://www.meeton.space", "http://meeton.space", "http://localhost:3000", "http://ui:3000").withSockJS();
     }
 
     @Override

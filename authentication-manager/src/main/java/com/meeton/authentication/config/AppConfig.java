@@ -22,6 +22,7 @@ public class AppConfig {
     private String tokenSecret;
     private long tokenExpirationMsec;
     private String meetonCoreUrl;
+    private String meetonUiUrl;
 
     @Bean
     public ObjectMapper objectMapper() {

@@ -1,2 +1,3 @@
 mvn clean package -Dmaven.test.skip=true
-docker build -t meeton-rec-manager:latest .
+docker build -t zorgont35/meeton-rec-manager:0.3 .
+docker push zorgont35/meeton-rec-manager:0.3

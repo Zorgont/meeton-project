@@ -48,7 +48,10 @@ app:
   tokenExpirationMsec: 864000000
   authorizedRedirectUris:
     - http://localhost:3000/oauth2/redirect
+    - http://www.meeton.space/oauth2/redirect
+    - http://meeton.space/oauth2/redirect
   meeton-core-url: http://API-GATEWAY
+  meeton-ui-url: http://localhost:3000
 
 server:
   port: 8081

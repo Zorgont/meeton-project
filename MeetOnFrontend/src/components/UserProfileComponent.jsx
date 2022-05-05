@@ -39,7 +39,7 @@ export default class UserProfileComponent extends Component {
         console.log("current username is: %s", username)
         UserService.getUserByUsername(username).then(res => {
             this.setState({user: res.data});
-            if (currentUser.username === res.data.username) {
+            if (currentUser?.username === res.data.username) {
                 localStorage.setItem("user", JSON.stringify(res.data));
             }
 

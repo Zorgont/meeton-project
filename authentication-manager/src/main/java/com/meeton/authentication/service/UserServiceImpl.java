@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
 
     @SneakyThrows
     private void sendConfirmationUserNotification(User user) {
-        String body = "<p>To confirm your account, please click here</p><br><a href='https://localhost:3000/confirm?token=" + user.getConfirmationToken() + "'>Click here!</a>";
+        String body = "<p>To confirm your account, please click here</p><br><a href='"+ appConfig.getMeetonUiUrl() +"/confirm?token=" + user.getConfirmationToken() + "'>Click here!</a>";
         EmailConfirmationRequest dto = new EmailConfirmationRequest(user.getEmail(), "Confirm your account", body);
         kafkaMessageProducer.sendMessage(KafkaMessageProducer.TOPIC_CONFIRMATION_TOKEN, mapper.writer().writeValueAsString(dto));
     }
