@@ -37,6 +37,7 @@ public class MeetingRecommendationsServiceImpl implements MeetingRecommendations
                 list.add(
                         getRecommendationsByTags(meetings, new ArrayList<>(tagGroup.getTags()), 10 * page)
                                 .stream()
+                                .map(this::getRecommendationsByRating)
                                 .flatMap(Collection::stream)
                                 .collect(Collectors.toList())
                 );
@@ -44,11 +45,10 @@ public class MeetingRecommendationsServiceImpl implements MeetingRecommendations
         }
 
         if (CollectionUtils.isEmpty(list)) {
-            list.add(meetings);
+            list.add(getRecommendationsByRating(meetings));
         }
 
         return list.stream()
-                .map(this::getRecommendationsByRating)
                 .limit(10L * (page))
                 .skip(10L * (page - 1))
                 .collect(Collectors.toList());

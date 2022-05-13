@@ -1,0 +1,13 @@
+@startuml
+
+Core -> Postgres: Собирает характеристики для расчета
+Postgres --> Core:
+Core -> "Rating Manager": Запрос на расчет рейтинга
+"Rating Manager" -> Mongo: Собирает коэффициенты-\nмультипликаторы
+Mongo --> "Rating Manager":
+"Rating Manager" -> "Rating Manager": Расчет рейтинга за анонсы
+"Rating Manager" -> "Rating Manager": Расчет рейтинга за посещаемость
+"Rating Manager" -> "Rating Manager": Расчет рейтинга за оценки (Вильсон)
+"Rating Manager" --> Core: Рейтинг пользователя
+
+@enduml

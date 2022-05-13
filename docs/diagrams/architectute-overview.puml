@@ -1,0 +1,37 @@
+@startuml
+
+node "Бэкенд" {
+	interface Односторонний_канал_связи as rest
+	interface Канал_связи_реального_времени as ws
+	interface Шина_сообщений as kafka
+	[Шлюз] AS APG
+	[Менеджер аутентификации] as AM
+	[Ядро] AS core
+	[Менеджер нотификаций] as NM
+	[Менеджер рейтинга] as RM
+	[Менеджер рекомендаций] as REC
+}
+
+node "Фронтенд" {
+	[Пользовательский\nинтерфейс] AS react
+}
+
+database "База данных" as db
+
+react --> rest
+react <--> ws
+rest --> APG
+ws <--> APG
+
+core --> kafka
+AM --> kafka
+kafka --> NM
+core <--> REC
+core <--> RM
+APG <--> AM
+AM --> core
+NM .. db
+core .. db
+AM .. db
+REC .. db
+@enduml

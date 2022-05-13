@@ -1,0 +1,11 @@
+@startuml
+
+Core -> Postgres: Собирает характеристики для расчета
+Postgres --> Core:
+Core -> "Rating Manager": Запрос на расчет рейтинга организаторов
+"Rating Manager" --> Core:
+Core --> "Recommendation Manager": Запрос на подборку "Тренды"
+"Recommendation Manager" -> "Recommendation Manager": Сортирует мероприятия по\nрейтингу их организаторов
+"Recommendation Manager" --> Core: Подборка "Тренды"
+
+@enduml
