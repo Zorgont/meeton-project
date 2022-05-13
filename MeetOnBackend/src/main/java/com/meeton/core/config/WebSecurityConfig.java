@@ -88,20 +88,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             platformService.create(new Platform("Microsoft Teams", "Idk what is this", PlatformType.ONLINE));
         }
 
-        if (!userRepository.existsByUsername("Zorgont")) {
-            User vladlen = new User();
-            vladlen.setUsername("Zorgont");
-            vladlen.setFirstName("Vladlen");
-            vladlen.setSecondName("Plakhotnyuk");
-            vladlen.setEmail("zorgont@gmail.com");
-            vladlen.setIsEnabled(true);
-            vladlen.setAbout("Hello, I'm Vladlen!");
-            vladlen.setStatus("active");
-            vladlen.setPassword(passwordEncoder().encode("123456"));
-            vladlen.setRoles(new HashSet<>(roleRepository.findAll()));
-            userRepository.save(vladlen);
-        }
-
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
