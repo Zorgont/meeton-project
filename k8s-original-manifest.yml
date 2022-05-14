@@ -19,7 +19,7 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
         - name: meeton-core
-          image: zorgont35/meeton-core:0.3
+          image: zorgont35/meeton-core:0.4.1
           env:
             - name: spring.kafka.producer.bootstrap-servers
               value: kafka:9092
@@ -79,7 +79,7 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
         - name: meeton-am
-          image: zorgont35/meeton-am:0.3
+          image: zorgont35/meeton-am:0.4
           env:
             - name: spring.security.oauth2.client.registration.google.redirectUri
               value: http://api.meeton.space/oauth2/callback/{registrationId}
@@ -149,7 +149,7 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
         - name: meeton-nm
-          image: zorgont35/meeton-nm:0.3
+          image: zorgont35/meeton-nm:0.4
           env:
             - name: spring.kafka.consumer.bootstrap-servers
               value: kafka:9092
@@ -213,7 +213,7 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
         - name: meeton-rm
-          image: zorgont35/meeton-rm:0.3
+          image: zorgont35/meeton-rm:0.4.2
           env:
             - name: eureka.client.serviceUrl.defaultZone
               value: http://meeton-eureka:8761/eureka/
@@ -275,7 +275,7 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
         - name: meeton-rec-manager
-          image: zorgont35/meeton-rec-manager:0.3
+          image: zorgont35/meeton-rec-manager:0.4
           env:
             - name: eureka.client.serviceUrl.defaultZone
               value: http://meeton-eureka:8761/eureka/
@@ -325,7 +325,7 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
         - name: meeton-apg
-          image: zorgont35/meeton-apg:0.3
+          image: zorgont35/meeton-apg:0.4
           env:
             - name: eureka.client.serviceUrl.defaultZone
               value: http://meeton-eureka:8761/eureka/
@@ -373,7 +373,7 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
         - name: meeton-eureka
-          image: zorgont35/meeton-eureka:0.3
+          image: zorgont35/meeton-eureka:0.4
           resources:
             requests:
               cpu: 100m
@@ -609,7 +609,7 @@ spec:
         beta.kubernetes.io/os: linux
       containers:
         - name: ui
-          image: zorgont35/meeton-ui:0.3
+          image: zorgont35/meeton-ui:0.4
           resources:
             requests:
               cpu: 100m

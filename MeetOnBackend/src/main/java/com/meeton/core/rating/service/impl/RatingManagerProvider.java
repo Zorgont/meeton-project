@@ -12,11 +12,13 @@ import com.meeton.core.services.RequestService;
 import com.meeton.core.services.ScoreService;
 import com.meeton.core.services.client.ServiceClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RatingManagerProvider implements UserRatingProvider {

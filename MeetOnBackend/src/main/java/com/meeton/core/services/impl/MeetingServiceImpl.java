@@ -103,6 +103,7 @@ public class MeetingServiceImpl implements MeetingService {
         meeting.setName(meetingRequest.getName());
         meeting.setAbout(meetingRequest.getAbout());
         meeting.setDate(meetingRequest.getDate());
+        meeting.setEndDate(meetingRequest.getEndDate());
         meeting.setIsParticipantAmountRestricted(meetingRequest.getIsParticipantAmountRestricted());
         meeting.setParticipantAmount(meetingRequest.getParticipantAmount());
         meeting.setIsPrivate(meetingRequest.getIsPrivate());

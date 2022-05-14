@@ -1,0 +1,82 @@
+@startuml
+
+component Frontend {
+    [Component]
+    [Service]
+}
+
+interface REST
+interface WebSocket
+
+component Backend {
+    component Core as core {
+        [DAO]
+        [User info API] as userAPI
+        [Comment API] as commAPI
+    }
+    component "Rating Manager" as ratman #white {
+    }
+
+    component "Recommendation Manager" as recman #white {
+    }
+
+    component "Notification Manager" as notman {
+        [Kafka topics listener]
+        [Notification API] as notAPI
+    }
+
+    component "API Gateway" as APG #white
+    component "Service Registry" as SR #white
+    component Kafka as kafka #AAA
+    component Zookeeper as zoo #AAA
+
+    component "Authentication Manager" as autman {
+        [Register API] as regAPI
+        [OAuth2 API]
+    }
+
+    interface WebSocket as WSBE
+    interface REST as RESTBE
+}
+
+component oauth2  #AAA  [
+External OAuth2 providers:
+- GitHub
+- Google
+]
+
+database PostgreSQL
+database Mongo #AAA {
+    database Notifications
+    database RatingWeights
+    database Users
+}
+
+[DAO] .. PostgreSQL
+ratman .. RatingWeights
+notman .. Notifications
+autman .. Users
+
+
+[Service] <--> REST: Get info from backend\nExecute actions
+REST <--> APG
+
+[Component] <--> WebSocket: Listen to new comments\nand notifications
+WebSocket <--> APG
+APG <--> WSBE
+APG <--> RESTBE
+notAPI --> WSBE: Real-time\nnotifications
+WSBE <--> commAPI
+
+kafka --> [Kafka topics listener]
+core --> kafka: Meeting changed event\nRequest changed event
+
+RESTBE <--> core
+RESTBE <--> autman
+core --> recman: Build Trends and\nRecommendations
+userAPI --> ratman: Calculate user rating
+regAPI --> userAPI
+[OAuth2 API] <--> oauth2
+SR <--> Backend
+kafka <--> zoo
+@enduml
